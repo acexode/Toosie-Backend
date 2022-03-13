@@ -1,0 +1,122 @@
+tags:
+- name: employees
+  description: employees API
+
+paths:
+# [GET] employees
+  /employees:
+    get:
+      tags:
+      - employees
+      summary: Find All employees
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+# [POST] employees
+    post:
+      tags:
+      - employees
+      summary: Add employee
+      parameters:
+      - name: body
+        in: body
+        description: employee Data
+        required: true
+        schema:
+          $ref: '#/definitions/employees'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [GET] employees/id
+  /employees/{id}:
+    get:
+      tags:
+      - employees
+      summary: Find employee By Id
+      parameters:
+      - name: id
+        in: path
+        description: employee Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [PUT] employees/id
+    put:
+      tags:
+      - employees
+      summary: Update employee By Id
+      parameters:
+      - name: id
+        in: path
+        description: employee Id
+        required: true
+      - name: body
+        in: body
+        description: employee Data
+        required: true
+        schema:
+          $ref: '#/definitions/employees'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [DELETE] employees/id
+    delete:
+      tags:
+      - employees
+      summary: Delete employee By Id
+      parameters:
+      - name: id
+        in: path
+        description: employee Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# definitions
+definitions:
+  employees:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+      id:
+        description: employee Id
+      email:
+        type: string
+        description: employee Email
+      password:
+        type: string
+        description: employee Password
+
+schemes:
+ - https
+ - http
