@@ -1,59 +1,66 @@
 /* eslint-disable prettier/prettier */
+import { NextFunction, Request, Response } from 'express';
 import { CreateCategoryDTO } from '@dtos/category.dto';
-import { HttpException } from '@exceptions/HttpException';
 import { ICategory } from '@interfaces/category.interface';
+import CategoryService from '@services/category.service';
 
-import { isEmpty } from '@utils/util';
-import CategoryModel from '@/models/category.model';
+class CategoryController {
+  public CategoryService = new CategoryService();
 
-class CategoryService {
-  public Categorys = CategoryModel;
+  public getCategorys = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const findAllCategorysData: ICategory[] = await this.CategoryService.findAllCategory();
 
-  public async findAllCategory(): Promise<ICategory[]> {
-    const Categorys: ICategory[] = await this.Categorys.find();
-    return Categorys;
-  }
-
-  public async findCategoryById(CategoryId: string): Promise<ICategory> {
-    if (isEmpty(CategoryId)) throw new HttpException(400, "You're not CategoryId");
-
-    const findCategory: ICategory = await this.Categorys.findOne({ _id: CategoryId });
-    if (!findCategory) throw new HttpException(409, "You're not Category");
-
-    return findCategory;
-  }
-
-  public async createCategory(CategoryData: CreateCategoryDTO): Promise<ICategory> {
-    if (isEmpty(CategoryData)) throw new HttpException(400, "You're not CategoryData");
-
-    const findCategory: ICategory = await this.Categorys.findOne({ category: CategoryData.category });
-    if (findCategory) throw new HttpException(409, `Category with this ${CategoryData.category} already exists`);
-
-    const createCategoryData: ICategory = await this.Categorys.create(CategoryData);
-
-    return createCategoryData;
-  }
-
-  public async updateCategory(CategoryId: string, CategoryData: CreateCategoryDTO): Promise<ICategory> {
-    if (isEmpty(CategoryData)) throw new HttpException(400, "You're not CategoryData");
-
-    if (CategoryId) {
-      const findCategory: ICategory = await this.Categorys.findOne({ _id: CategoryId });
-      if (!findCategory) throw new HttpException(409, `Category does not  exists`);
+      res.status(200).json({ data: findAllCategorysData, message: 'findAll' });
+    } catch (error) {
+      next(error);
     }
+  };
 
-    const updateCategoryById: ICategory = await this.Categorys.findByIdAndUpdate(CategoryId, { CategoryData });
-    if (!updateCategoryById) throw new HttpException(409, 'Failed to update Category');
+  public getCategoryById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const CategoryId: string = req.params.id;
+      const findOneCategoryData: ICategory = await this.CategoryService.findCategoryById(CategoryId);
 
-    return updateCategoryById;
-  }
+      res.status(200).json({ data: findOneCategoryData, message: 'findOne' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  public async deleteCategory(CategoryId: string): Promise<ICategory> {
-    const deleteCategoryById: ICategory = await this.Categorys.findByIdAndDelete(CategoryId);
-    if (!deleteCategoryById) throw new HttpException(409, 'Failed to delete Category');
+  public createCategory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const CategoryData: CreateCategoryDTO = req.body;
+      const createCategoryData: ICategory = await this.CategoryService.createCategory(CategoryData);
 
-    return deleteCategoryById;
-  }
+      res.status(201).json({ data: createCategoryData, message: 'created' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateCategory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const CategoryId: string = req.params.id;
+      const CategoryData: CreateCategoryDTO = req.body;
+      const updateCategoryData: ICategory = await this.CategoryService.updateCategory(CategoryId, CategoryData);
+
+      res.status(200).json({ data: updateCategoryData, message: 'updated' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteCategory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const CategoryId: string = req.params.id;
+      const deleteCategoryData: ICategory = await this.CategoryService.deleteCategory(CategoryId);
+
+      res.status(200).json({ data: deleteCategoryData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
-export default CategoryService;
+export default CategoryController;

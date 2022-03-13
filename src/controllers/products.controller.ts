@@ -1,60 +1,66 @@
 /* eslint-disable prettier/prettier */
+import { NextFunction, Request, Response } from 'express';
 import { CreateProductsDTO } from '@dtos/products.dto';
-import { HttpException } from '@exceptions/HttpException';
 import { IProducts } from '@interfaces/products.interface';
+import ProductService from '@services/products.service';
 
-import { isEmpty } from '@utils/util';
-import ProductModel from '@/models/products.model';
+class ProductController {
+  public ProductService = new ProductService();
 
-class ProductService {
-  public Products = ProductModel;
+  public getProducts = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const findAllProductsData: IProducts[] = await this.ProductService.findAllProduct();
 
-  public async findAllProduct(): Promise<IProducts[]> {
-    const Products: IProducts[] = await this.Products.find();
-    return Products;
-  }
-
-  public async findProductById(ProductId: string): Promise<IProducts> {
-    if (isEmpty(ProductId)) throw new HttpException(400, "You're not ProductId");
-
-    const findProduct: IProducts = await this.Products.findOne({ _id: ProductId });
-    if (!findProduct) throw new HttpException(409, "You're not Product");
-
-    return findProduct;
-  }
-
-  public async createProduct(ProductData: CreateProductsDTO): Promise<IProducts> {
-    if (isEmpty(ProductData)) throw new HttpException(400, "You're not ProductData");
-
-    const findProduct: IProducts = await this.Products.findOne({ title: ProductData.title });
-    if (findProduct) throw new HttpException(409, `Product with this ${ProductData.title} already exists`);
-
-    const createProductData: IProducts = await this.Products.create(ProductData);
-
-    return createProductData;
-  }
-
-  public async updateProduct(ProductId: string, ProductData: CreateProductsDTO): Promise<IProducts> {
-    if (isEmpty(ProductData)) throw new HttpException(400, "You're not ProductData");
-
-    if (ProductId) {
-      const findProduct: IProducts = await this.Products.findOne({ _id: ProductId });
-      if (!findProduct) throw new HttpException(409, `Product does not  exists`);
+      res.status(200).json({ data: findAllProductsData, message: 'findAll' });
+    } catch (error) {
+      next(error);
     }
+  };
 
-    const updateProductById: IProducts = await this.Products.findByIdAndUpdate(ProductId, { ProductData });
-    if (!updateProductById) throw new HttpException(409, 'Failed to update Product');
+  public getProductById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const ProductId: string = req.params.id;
+      const findOneProductData: IProducts = await this.ProductService.findProductById(ProductId);
 
-    return updateProductById;
-  }
+      res.status(200).json({ data: findOneProductData, message: 'findOne' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  public async deleteProduct(ProductId: string): Promise<IProducts> {
-    const deleteProductById: IProducts = await this.Products.findByIdAndDelete(ProductId);
-    if (!deleteProductById) throw new HttpException(409, 'Failed to delete Product');
+  public createProduct = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const ProductData: CreateProductsDTO = req.body;
+      const createProductData: IProducts = await this.ProductService.createProduct(ProductData);
 
-    return deleteProductById;
-  }
+      res.status(201).json({ data: createProductData, message: 'created' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const ProductId: string = req.params.id;
+      const ProductData: CreateProductsDTO = req.body;
+      const updateProductData: IProducts = await this.ProductService.updateProduct(ProductId, ProductData);
+
+      res.status(200).json({ data: updateProductData, message: 'updated' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const ProductId: string = req.params.id;
+      const deleteProductData: IProducts = await this.ProductService.deleteProduct(ProductId);
+
+      res.status(200).json({ data: deleteProductData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
-export default ProductService;
-
+export default ProductController;

@@ -1,59 +1,66 @@
 /* eslint-disable prettier/prettier */
+import { NextFunction, Request, Response } from 'express';
 import { CreateBlogDTO } from '@dtos/blog.dto';
-import { HttpException } from '@exceptions/HttpException';
 import { IBlog } from '@interfaces/blog.interface';
+import BlogService from '@services/blog.service';
 
-import { isEmpty } from '@utils/util';
-import BlogModel from '@/models/blog.model';
+class BlogController {
+  public BlogService = new BlogService();
 
-class BlogService {
-  public Blogs = BlogModel;
+  public getBlogs = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const findAllBlogsData: IBlog[] = await this.BlogService.findAllBlog();
 
-  public async findAllBlog(): Promise<IBlog[]> {
-    const Blogs: IBlog[] = await this.Blogs.find();
-    return Blogs;
-  }
-
-  public async findBlogById(BlogId: string): Promise<IBlog> {
-    if (isEmpty(BlogId)) throw new HttpException(400, "You're not BlogId");
-
-    const findBlog: IBlog = await this.Blogs.findOne({ _id: BlogId });
-    if (!findBlog) throw new HttpException(409, "You're not Blog");
-
-    return findBlog;
-  }
-
-  public async createBlog(BlogData: CreateBlogDTO): Promise<IBlog> {
-    if (isEmpty(BlogData)) throw new HttpException(400, "You're not BlogData");
-
-    const findBlog: IBlog = await this.Blogs.findOne({ blogTitle: BlogData.blogTitle });
-    if (findBlog) throw new HttpException(409, `Blog with this ${BlogData.blogTitle} already exists`);
-
-    const createBlogData: IBlog = await this.Blogs.create(BlogData);
-
-    return createBlogData;
-  }
-
-  public async updateBlog(BlogId: string, BlogData: CreateBlogDTO): Promise<IBlog> {
-    if (isEmpty(BlogData)) throw new HttpException(400, "You're not BlogData");
-
-    if (BlogId) {
-      const findBlog: IBlog = await this.Blogs.findOne({ _id: BlogId });
-      if (!findBlog) throw new HttpException(409, `Blog does not  exists`);
+      res.status(200).json({ data: findAllBlogsData, message: 'findAll' });
+    } catch (error) {
+      next(error);
     }
+  };
 
-    const updateBlogById: IBlog = await this.Blogs.findByIdAndUpdate(BlogId, { BlogData });
-    if (!updateBlogById) throw new HttpException(409, 'Failed to update blog');
+  public getBlogById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const BlogId: string = req.params.id;
+      const findOneBlogData: IBlog = await this.BlogService.findBlogById(BlogId);
 
-    return updateBlogById;
-  }
+      res.status(200).json({ data: findOneBlogData, message: 'findOne' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  public async deleteBlog(BlogId: string): Promise<IBlog> {
-    const deleteBlogById: IBlog = await this.Blogs.findByIdAndDelete(BlogId);
-    if (!deleteBlogById) throw new HttpException(409, 'Failed to delete blog');
+  public createBlog = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const BlogData: CreateBlogDTO = req.body;
+      const createBlogData: IBlog = await this.BlogService.createBlog(BlogData);
 
-    return deleteBlogById;
-  }
+      res.status(201).json({ data: createBlogData, message: 'created' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateBlog = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const BlogId: string = req.params.id;
+      const BlogData: CreateBlogDTO = req.body;
+      const updateBlogData: IBlog = await this.BlogService.updateBlog(BlogId, BlogData);
+
+      res.status(200).json({ data: updateBlogData, message: 'updated' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteBlog = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const BlogId: string = req.params.id;
+      const deleteBlogData: IBlog = await this.BlogService.deleteBlog(BlogId);
+
+      res.status(200).json({ data: deleteBlogData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
-export default BlogService;
+export default BlogController;

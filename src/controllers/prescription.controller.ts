@@ -1,60 +1,66 @@
 /* eslint-disable prettier/prettier */
+import { NextFunction, Request, Response } from 'express';
 import { CreatePrescriptionDTO } from '@dtos/prescription.dto';
-import { HttpException } from '@exceptions/HttpException';
 import { IPrescription } from '@interfaces/prescription.interface';
+import PrescriptionService from '@services/prescription.service';
 
-import { isEmpty } from '@utils/util';
-import PrescriptionModel from '@/models/prescription.model';
+class PrescriptionController {
+  public PrescriptionService = new PrescriptionService();
 
-class PrescriptionService {
-  public Prescriptions = PrescriptionModel;
+  public getPrescriptions = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const findAllPrescriptionsData: IPrescription[] = await this.PrescriptionService.findAllPrescription();
 
-  public async findAllPrescription(): Promise<IPrescription[]> {
-    const Prescriptions: IPrescription[] = await this.Prescriptions.find();
-    return Prescriptions;
-  }
-
-  public async findPrescriptionById(PrescriptionId: string): Promise<IPrescription> {
-    if (isEmpty(PrescriptionId)) throw new HttpException(400, "You're not PrescriptionId");
-
-    const findPrescription: IPrescription = await this.Prescriptions.findOne({ _id: PrescriptionId });
-    if (!findPrescription) throw new HttpException(409, "You're not Prescription");
-
-    return findPrescription;
-  }
-
-  public async createPrescription(PrescriptionData: CreatePrescriptionDTO): Promise<IPrescription> {
-    if (isEmpty(PrescriptionData)) throw new HttpException(400, "You're not PrescriptionData");
-
-    const findPrescription: IPrescription = await this.Prescriptions.findOne({ Prescription: PrescriptionData.description });
-    if (findPrescription) throw new HttpException(409, `Prescription with this ${PrescriptionData.description} already exists`);
-
-    const createPrescriptionData: IPrescription = await this.Prescriptions.create(PrescriptionData);
-
-    return createPrescriptionData;
-  }
-
-  public async updatePrescription(PrescriptionId: string, PrescriptionData: CreatePrescriptionDTO): Promise<IPrescription> {
-    if (isEmpty(PrescriptionData)) throw new HttpException(400, "You're not PrescriptionData");
-
-    if (PrescriptionId) {
-      const findPrescription: IPrescription = await this.Prescriptions.findOne({ _id: PrescriptionId });
-      if (!findPrescription) throw new HttpException(409, `Prescription does not  exists`);
+      res.status(200).json({ data: findAllPrescriptionsData, message: 'findAll' });
+    } catch (error) {
+      next(error);
     }
+  };
 
-    const updatePrescriptionById: IPrescription = await this.Prescriptions.findByIdAndUpdate(PrescriptionId, { PrescriptionData });
-    if (!updatePrescriptionById) throw new HttpException(409, 'Failed to update Prescription');
+  public getPrescriptionById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const PrescriptionId: string = req.params.id;
+      const findOnePrescriptionData: IPrescription = await this.PrescriptionService.findPrescriptionById(PrescriptionId);
 
-    return updatePrescriptionById;
-  }
+      res.status(200).json({ data: findOnePrescriptionData, message: 'findOne' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  public async deletePrescription(PrescriptionId: string): Promise<IPrescription> {
-    const deletePrescriptionById: IPrescription = await this.Prescriptions.findByIdAndDelete(PrescriptionId);
-    if (!deletePrescriptionById) throw new HttpException(409, 'Failed to delete Prescription');
+  public createPrescription = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const PrescriptionData: CreatePrescriptionDTO = req.body;
+      const createPrescriptionData: IPrescription = await this.PrescriptionService.createPrescription(PrescriptionData);
 
-    return deletePrescriptionById;
-  }
+      res.status(201).json({ data: createPrescriptionData, message: 'created' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updatePrescription = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const PrescriptionId: string = req.params.id;
+      const PrescriptionData: CreatePrescriptionDTO = req.body;
+      const updatePrescriptionData: IPrescription = await this.PrescriptionService.updatePrescription(PrescriptionId, PrescriptionData);
+
+      res.status(200).json({ data: updatePrescriptionData, message: 'updated' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deletePrescription = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const PrescriptionId: string = req.params.id;
+      const deletePrescriptionData: IPrescription = await this.PrescriptionService.deletePrescription(PrescriptionId);
+
+      res.status(200).json({ data: deletePrescriptionData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
-export default PrescriptionService;
-
+export default PrescriptionController;
