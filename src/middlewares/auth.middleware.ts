@@ -5,7 +5,7 @@ import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, RequestWithUser } from '@interfaces/auth.interface';
 import userModel from '@models/users.model';
 
-const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+const authMiddleware = async (req: any, res: Response, next: NextFunction) => {
   try {
     const Authorization = req.header('Authorization').split('Bearer ')[1] || null;
 
