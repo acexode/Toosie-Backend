@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import App from '@/app';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, LoginDto } from '@dtos/users.dto';
 import AuthRoute from '@routes/auth.route';
 
 afterAll(async () => {
@@ -15,6 +15,8 @@ describe('Testing Auth', () => {
       const userData: CreateUserDto = {
         email: 'test@email.com',
         password: 'q1w2e3r4!',
+        fullName: 'Abubakar!',
+        phone: '12345678',
       };
 
       const authRoute = new AuthRoute();
@@ -35,7 +37,7 @@ describe('Testing Auth', () => {
 
   describe('[POST] /login', () => {
     it('response should have the Set-Cookie header with the Authorization token', async () => {
-      const userData: CreateUserDto = {
+      const userData: LoginDto = {
         email: 'test@email.com',
         password: 'q1w2e3r4!',
       };

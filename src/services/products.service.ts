@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-const cloudinary = require('cloudinary').v2
 import { CreateProductsDTO } from '@dtos/products.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { IProducts } from '@interfaces/products.interface';
@@ -12,13 +11,7 @@ import 'dotenv/config';
 
 class ProductService {
   public Products = ProductModel;
-  constructor(){
-    cloudinary.config({
-      cloud_name: process.env.CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET
-    })
-  }
+
   public async findAllProduct(): Promise<IProducts[]> {
     const Products: IProducts[] = await this.Products.find();
     return Products;
@@ -64,23 +57,17 @@ class ProductService {
 
     return deleteProductById;
   }
-  public async uploadMedia (file, folder)  {
-    return new Promise(resolve => {
-      cloudinary.uploader.upload(
-        file,
-        result => {
-          resolve({
-            url: result.url,
-            id: result.public_id,
-          });
-        },
-        {
-          resource_type: 'auto',
-          folder: folder,
-        },
-      );
-    });
-  };
+  public fileFilter(req, file, cb){
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true)
+    } else {
+      //reject file
+      cb({
+        message: 'Unsupported file format'
+      }, false)
+    }
+  }
+
 
 }
 

@@ -3,7 +3,8 @@ import { NextFunction, Request, Response } from 'express';
 import { CreateProductsDTO } from '@dtos/products.dto';
 import { IProducts } from '@interfaces/products.interface';
 import ProductService from '@services/products.service';
-
+const fs = require('fs');
+const formidable = require('formidable');
 class ProductController {
   public ProductService = new ProductService();
 
@@ -58,6 +59,22 @@ class ProductController {
 
       res.status(200).json({ data: deleteProductData, message: 'deleted' });
     } catch (error) {
+      next(error);
+    }
+  };
+  public uploadMedia = async (req: any, res: Response, next: NextFunction) => {
+    try {
+      console.log(req.files)
+      if(req.files){
+        const images = req.files.map(data => data.path )
+        console.log(images);
+        res.status(200).json({ message: 'uploaded sucessfully', images });
+      }else{
+        res.json({ success: false, message: "upload failed" });
+      }
+
+    } catch (error) {
+      console.log(error)
       next(error);
     }
   };
