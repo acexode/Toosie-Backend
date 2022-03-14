@@ -24,7 +24,7 @@ class AuthService {
     return createUserData;
   }
 
-  public async login(userData: LoginDto): Promise<{ token: TokenData; findUser: User }> {
+  public async login(userData: LoginDto): Promise<{ token: any; findUser: User }> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser: User = await this.users.findOne({ email: userData.email });
