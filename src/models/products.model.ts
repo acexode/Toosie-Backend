@@ -4,8 +4,9 @@ import { model, Schema, Document } from 'mongoose';
 
 const productSchema: Schema = new Schema({
     category: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
+    ref: 'Category'
   },
   title: {
     type: String,

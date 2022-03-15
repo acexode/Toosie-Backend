@@ -23,7 +23,7 @@ const userSchema: Schema = new Schema({
   },
   resetToken: {
     type: String,
-    default: null
+    default: null,
   },
   isActivated: {
     type: Boolean,
@@ -31,7 +31,7 @@ const userSchema: Schema = new Schema({
   },
   userType: {
     type: String,
-    enum : ['user','admin'],
+    enum: ['user', 'admin'],
     default: 'user',
   },
 });
