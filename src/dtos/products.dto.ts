@@ -1,3 +1,4 @@
+import { IsOptional } from 'class-validator';
 /* eslint-disable prettier/prettier */
 import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
 
@@ -19,6 +20,7 @@ export class CreateProductsDTO {
   public discountPercent: number;
 
   @IsArray()
+  @IsOptional()
   public tags: string[];
 
   @IsString()
