@@ -1,9 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { IsBoolean, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class CreateProductsDTO {
-  @IsString()
-  public _id: string
 
   @IsString()
   public category: string;
@@ -14,10 +12,10 @@ export class CreateProductsDTO {
   @IsString()
   public description: string;
 
-  @IsString()
+  @IsNumber()
   public actualPrice: number;
 
-  @IsString()
+  @IsNumber()
   public discountPercent: number;
 
   @IsString()
@@ -26,7 +24,7 @@ export class CreateProductsDTO {
   @IsString()
   public brand: string;
 
-  @IsString()
+  @IsArray()
   public resourceImages: string[];
 
   @IsString()
