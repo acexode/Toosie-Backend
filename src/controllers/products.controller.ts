@@ -3,14 +3,13 @@ import { NextFunction, Request, Response } from 'express';
 import { CreateProductsDTO } from '@dtos/products.dto';
 import { IProducts } from '@interfaces/products.interface';
 import ProductService from '@services/products.service';
-const fs = require('fs');
-const formidable = require('formidable');
 class ProductController {
   public ProductService = new ProductService();
 
   public getProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllProductsData: IProducts[] = await this.ProductService.findAllProduct();
+      const query = req.query
+      const findAllProductsData: IProducts[] = await this.ProductService.findAllProduct(query);
 
       res.status(200).json({ data: findAllProductsData, message: 'findAll' });
     } catch (error) {

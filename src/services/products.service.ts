@@ -12,8 +12,8 @@ import 'dotenv/config';
 class ProductService {
   public Products = ProductModel;
 
-  public async findAllProduct(): Promise<IProducts[]> {
-    const Products: IProducts[] = await this.Products.find();
+  public async findAllProduct(query): Promise<IProducts[]> {
+    const Products: IProducts[] = await this.Products.find(query);
     return Products;
   }
 
