@@ -18,7 +18,7 @@ export class CreateProductsDTO {
   @IsNumber()
   public discountPercent: number;
 
-  @IsString()
+  @IsArray()
   public tags: string[];
 
   @IsString()
