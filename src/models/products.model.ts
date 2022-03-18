@@ -29,8 +29,8 @@ const productSchema: Schema = new Schema({
     required: true,
   },
   tags: {
-    type: String,
-    required: true,
+    type: [],
+    required: false,
   },
   brand: {
     type: String,

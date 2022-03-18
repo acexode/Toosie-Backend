@@ -19,6 +19,9 @@ export class CreateProductsDTO {
   @IsNumber()
   public discountPercent: number;
 
+  @IsNumber()
+  public stock: number;
+
   @IsArray()
   @IsOptional()
   public tags: string[];
