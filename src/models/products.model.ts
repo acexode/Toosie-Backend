@@ -16,6 +16,10 @@ const productSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  shortSummary: {
+    type: String,
+    required: true,
+  },
   actualPrice: {
     type: String,
     required: true,
@@ -30,6 +34,22 @@ const productSchema: Schema = new Schema({
   },
   brand: {
     type: String,
+    required: true,
+  },
+  isTrending: {
+    type: Boolean,
+    required: true,
+  },
+  isSpecial: {
+    type: Boolean,
+    required: true,
+  },
+  enabled: {
+    type: Boolean,
+    required: true,
+  },
+  stock: {
+    type: Number,
     required: true,
   },
   resourceImages: {

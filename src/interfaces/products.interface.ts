@@ -9,4 +9,8 @@ export interface IProducts {
   tags: string[];
   brand: string;
   resourceImages: string[];
+  shortSummary: string;
+  isTrending: boolean;
+  isSpecial: boolean;
+  enabled: boolean
 }

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsString } from "class-validator";
+import { IsBoolean, IsString } from "class-validator";
 
 export class CreateProductsDTO {
   @IsString()
@@ -28,4 +28,16 @@ export class CreateProductsDTO {
 
   @IsString()
   public resourceImages: string[];
+
+  @IsString()
+  public shortSummary: string;
+
+  @IsBoolean()
+  public isTrending: boolean;
+
+  @IsBoolean()
+  public isSpecial: boolean;
+
+  @IsBoolean()
+  public enabled: boolean
 }
