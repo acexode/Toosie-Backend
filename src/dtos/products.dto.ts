@@ -1,6 +1,5 @@
-import { IsOptional } from 'class-validator';
 /* eslint-disable prettier/prettier */
-import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNumber, IsString, IsOptional } from "class-validator";
 
 export class CreateProductsDTO {
 
