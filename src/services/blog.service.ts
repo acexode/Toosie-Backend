@@ -23,13 +23,13 @@ class BlogService {
     return findBlog;
   }
 
-  public async createBlog(BlogData: CreateBlogDTO, user): Promise<IBlog> {
+  public async createBlog(BlogData: CreateBlogDTO): Promise<IBlog> {
     if (isEmpty(BlogData)) throw new HttpException(400, "You're not BlogData");
 
     const findBlog: IBlog = await this.Blogs.findOne({ blogTitle: BlogData.blogTitle });
     if (findBlog) throw new HttpException(409, `Blog with this ${BlogData.blogTitle} already exists`);
 
-    const createBlogData: IBlog = await this.Blogs.create({...BlogData, blogAuthor: user._id});
+    const createBlogData: IBlog = await this.Blogs.create(BlogData);
     console.log(createBlogData)
     return createBlogData;
   }
