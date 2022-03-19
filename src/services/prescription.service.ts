@@ -9,8 +9,8 @@ import PrescriptionModel from '@/models/prescription.model';
 class PrescriptionService {
   public Prescriptions = PrescriptionModel;
 
-  public async findAllPrescription(): Promise<IPrescription[]> {
-    const Prescriptions: IPrescription[] = await this.Prescriptions.find();
+  public async findAllPrescription(query): Promise<IPrescription[]> {
+    const Prescriptions: IPrescription[] = await this.Prescriptions.find(query);
     return Prescriptions;
   }
 

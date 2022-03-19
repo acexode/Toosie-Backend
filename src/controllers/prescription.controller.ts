@@ -9,7 +9,7 @@ class PrescriptionController {
 
   public getPrescriptions = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllPrescriptionsData: IPrescription[] = await this.PrescriptionService.findAllPrescription();
+      const findAllPrescriptionsData: IPrescription[] = await this.PrescriptionService.findAllPrescription(req.query);
 
       res.status(200).json({ data: findAllPrescriptionsData, message: 'findAll' });
     } catch (error) {
