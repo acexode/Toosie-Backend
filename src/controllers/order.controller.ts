@@ -1,66 +1,66 @@
 /* eslint-disable prettier/prettier */
 import { NextFunction, Request, Response } from 'express';
-import { CreateBlogDTO } from '@dtos/blog.dto';
-import { IBlog } from '@interfaces/blog.interface';
-import BlogService from '@services/blog.service';
+import { CreateOrderDTO } from '@dtos/order.dto';
+import { IOrder } from '@interfaces/order.interface';
+import OrderService from '@services/order.service';
 
-class BlogController {
-  public BlogService = new BlogService();
+class OrderController {
+  public OrderService = new OrderService();
 
-  public getBlogs = async (req: Request, res: Response, next: NextFunction) => {
+  public getOrders = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllBlogsData: IBlog[] = await this.BlogService.findAllBlog();
+      const findAllOrdersData: IOrder[] = await this.OrderService.findAllOrder(req.query);
 
-      res.status(200).json({ data: findAllBlogsData, message: 'findAll' });
+      res.status(200).json({ data: findAllOrdersData, message: 'findAll' });
     } catch (error) {
       next(error);
     }
   };
 
-  public getBlogById = async (req: Request, res: Response, next: NextFunction) => {
+  public getOrderById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const BlogId: string = req.params.id;
-      const findOneBlogData: IBlog = await this.BlogService.findBlogById(BlogId);
+      const OrderId: string = req.params.id;
+      const findOneOrderData: IOrder = await this.OrderService.findOrderById(OrderId);
 
-      res.status(200).json({ data: findOneBlogData, message: 'findOne' });
+      res.status(200).json({ data: findOneOrderData, message: 'findOne' });
     } catch (error) {
       next(error);
     }
   };
 
-  public createBlog = async (req: Request, res: Response, next: NextFunction) => {
+  public createOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const BlogData: CreateBlogDTO = req.body;
-      const createBlogData: IBlog = await this.BlogService.createBlog(BlogData);
+      const OrderData: CreateOrderDTO = req.body;
+      const createOrderData: IOrder = await this.OrderService.createOrder(OrderData);
 
-      res.status(201).json({ data: createBlogData, message: 'created' });
+      res.status(201).json({ data: createOrderData, message: 'created' });
     } catch (error) {
       next(error);
     }
   };
 
-  public updateBlog = async (req: Request, res: Response, next: NextFunction) => {
+  public updateOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const BlogId: string = req.params.id;
-      const BlogData: CreateBlogDTO = req.body;
-      const updateBlogData: IBlog = await this.BlogService.updateBlog(BlogId, BlogData);
+      const OrderId: string = req.params.id;
+      const OrderData: CreateOrderDTO = req.body;
+      const updateOrderData: IOrder = await this.OrderService.updateOrder(OrderId, OrderData);
 
-      res.status(200).json({ data: updateBlogData, message: 'updated' });
+      res.status(200).json({ data: updateOrderData, message: 'updated' });
     } catch (error) {
       next(error);
     }
   };
 
-  public deleteBlog = async (req: Request, res: Response, next: NextFunction) => {
+  public deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const BlogId: string = req.params.id;
-      const deleteBlogData: IBlog = await this.BlogService.deleteBlog(BlogId);
+      const OrderId: string = req.params.id;
+      const deleteOrderData: IOrder = await this.OrderService.deleteOrder(OrderId);
 
-      res.status(200).json({ data: deleteBlogData, message: 'deleted' });
+      res.status(200).json({ data: deleteOrderData, message: 'deleted' });
     } catch (error) {
       next(error);
     }
   };
 }
 
-export default BlogController;
+export default OrderController;
