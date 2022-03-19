@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { model, Schema, Document } from 'mongoose';
 import { User } from '@interfaces/users.interface';
 
@@ -34,6 +35,9 @@ const userSchema: Schema = new Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+},
+{
+  timestamps: true,
 });
 
 const userModel = model<User & Document>('User', userSchema);

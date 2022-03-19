@@ -56,6 +56,9 @@ const productSchema: Schema = new Schema({
     type: [],
     required: true,
   },
+},
+{
+  timestamps: true,
 });
 
 const ProductModel = model<IProducts & Document>('Product', productSchema);

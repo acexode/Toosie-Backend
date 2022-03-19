@@ -17,6 +17,9 @@ const prescriptionSchema: Schema = new Schema({
     required: true,
   },
   
+},
+{
+  timestamps: true,
 });
 
 const PrescriptionModel = model<IPrescription & Document>('Prescription', prescriptionSchema);

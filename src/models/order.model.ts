@@ -44,6 +44,9 @@ const orderSchema: Schema = new Schema({
       state: String,
       postalCode: String
     }
+},
+{
+  timestamps: true,
 } );
 
 const OrderModel = model<IOrder & Document>('Order', orderSchema);
