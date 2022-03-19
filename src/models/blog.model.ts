@@ -15,6 +15,13 @@ const blogSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  blogAuthor:{
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
+  },
+  timestamps: true
+  
 });
 
 const BlogModel = model<IBlog & Document>('Blog', blogSchema);

@@ -28,10 +28,10 @@ class BlogController {
     }
   };
 
-  public createBlog = async (req: Request, res: Response, next: NextFunction) => {
+  public createBlog = async (req: any, res: Response, next: NextFunction) => {
     try {
       const BlogData: CreateBlogDTO = req.body;
-      const createBlogData: IBlog = await this.BlogService.createBlog(BlogData);
+      const createBlogData: IBlog = await this.BlogService.createBlog(BlogData, req.user);
 
       res.status(201).json({ data: createBlogData, message: 'created' });
     } catch (error) {
