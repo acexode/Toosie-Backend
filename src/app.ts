@@ -50,7 +50,7 @@ class App {
     if (this.env !== 'production') {
       set('debug', true);
     }
-
+    console.log(process.env.databaseUrl);
     connect(process.env.databaseUrl, dbConnection.options);
   }
 

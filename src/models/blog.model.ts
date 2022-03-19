@@ -19,9 +19,10 @@ const blogSchema: Schema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
-  },
-  timestamps: true
-  
+  }
+},
+{
+  timestamps: true,
 });
 
 const BlogModel = model<IBlog & Document>('Blog', blogSchema);
