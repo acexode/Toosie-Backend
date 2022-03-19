@@ -17,6 +17,11 @@ const orderSchema: Schema = new Schema({
     enum: ["pending", "paid"],
     required: true,
   },
+  paymentMethod:  {
+    type: String,
+    enum: ["pod", "card"],
+    required: true,
+  },
   deliveryStatus:  {
     type: String,
     enum: ["pending", "delivered"],

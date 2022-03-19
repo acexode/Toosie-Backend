@@ -27,6 +27,8 @@ class OrderService {
     if (isEmpty(OrderData)) throw new HttpException(400, "You're not OrderData");
     const newOrder = {
       ...OrderData,
+      paymentStatus: OrderData.paymentMethod === 'pod' ? 'pending' : 'paid',
+      deliveryStatus: 'pending',
       paymentId: uuidv4()
     }
     const createOrderData: IOrder = await this.Orders.create(newOrder);

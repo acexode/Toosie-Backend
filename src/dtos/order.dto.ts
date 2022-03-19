@@ -15,6 +15,9 @@ export class CreateOrderDTO {
   @IsString()
   deliveryStatus: string;
 
+  @IsString()
+  paymentMethod: string;
+
   @IsNumber()
   totalCost: number;
 

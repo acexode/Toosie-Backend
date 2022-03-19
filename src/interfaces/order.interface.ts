@@ -4,6 +4,7 @@ export interface IOrder {
   paymentId: string;
   paymentStatus: string;
   deliveryStatus: string;
+  paymentMethod: string;
   totalCost: number;
   products: string;
   shipping: object;
