@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { IsString } from "class-validator";
+import { IsString, IsOptional } from "class-validator";
 
 export class CreatePrescriptionDTO {
     @IsString()
     public description: string;
 
     @IsString()
+    @IsOptional()
     public prescriptionImage: string;
 
     @IsString()
