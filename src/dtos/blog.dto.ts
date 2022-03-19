@@ -12,4 +12,7 @@ export class CreateBlogDTO {
   @IsString()
   blogImage: string;
 
+  @IsString()
+  blogAuthor: string;
+
 }
