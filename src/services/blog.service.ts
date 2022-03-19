@@ -30,7 +30,7 @@ class BlogService {
     if (findBlog) throw new HttpException(409, `Blog with this ${BlogData.blogTitle} already exists`);
 
     const createBlogData: IBlog = await this.Blogs.create({...BlogData, blogAuthor: user._id});
-
+    console.log(createBlogData)
     return createBlogData;
   }
 
