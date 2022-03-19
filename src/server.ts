@@ -10,6 +10,7 @@ import PrescriptionRoute from '@routes/prescription.route';
 import CategoryRoute from '@routes/category.route';
 import ProductRoute from '@routes/products.route';
 import validateEnv from '@utils/validateEnv';
+import OrderRoute from './routes/order.route';
 
 validateEnv();
 
@@ -21,6 +22,7 @@ const app = new App([
   new PrescriptionRoute(),
   new ProductRoute(),
   new CategoryRoute(),
+  new OrderRoute(),
 ]);
 
 app.listen();
