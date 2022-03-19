@@ -25,7 +25,7 @@ class App {
     this.app = express();
     this.port = process.env.PORT || 3000;
     this.env = process.env.NODE_ENV || 'development';
-
+    console.log(this.env);
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
