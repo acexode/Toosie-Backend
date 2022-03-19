@@ -10,7 +10,7 @@ class BlogService {
   public Blogs = BlogModel;
 
   public async findAllBlog(): Promise<IBlog[]> {
-    const Blogs: IBlog[] = await this.Blogs.find();
+    const Blogs: IBlog[] = await this.Blogs.find().populate('blogAuthor');
     return Blogs;
   }
 
