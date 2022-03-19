@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 export interface IPrescription {
-    _id: string
+    _id?: string
+    customerId: string;
     description: string;
     prescriptionImage: string;
 }

@@ -3,6 +3,11 @@ import { IPrescription } from './../interfaces/prescription.interface';
 import { model, Schema, Document } from 'mongoose';
 
 const prescriptionSchema: Schema = new Schema({
+    customerId:  {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    },
     description: {
     type: String,
     required: true,
@@ -11,6 +16,7 @@ const prescriptionSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  
 });
 
 const PrescriptionModel = model<IPrescription & Document>('Prescription', prescriptionSchema);
