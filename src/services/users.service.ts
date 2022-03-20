@@ -42,10 +42,10 @@ class UserService {
       if (findUser && findUser._id != userId) throw new HttpException(409, `You're email ${userData.email} already exists`);
     }
 
-    if (userData.password) {
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-      userData = { ...userData, password: hashedPassword };
-    }
+    // if (userData.password) {
+    //   const hashedPassword = await bcrypt.hash(userData.password, 10);
+    //   userData = { ...userData, password: hashedPassword };
+    // }
 
     const updateUserById: User = await this.users.findByIdAndUpdate(userId, { $set: { ...userData } });
     if (!updateUserById) throw new HttpException(409, "You're not user");

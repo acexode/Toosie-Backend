@@ -10,7 +10,7 @@ class OrderService {
   public Orders = OrderModel;
 
   public async findAllOrder(query): Promise<IOrder[]> {
-    const Orders: IOrder[] = await this.Orders.find(query);
+    const Orders: IOrder[] = await this.Orders.find(query).populate('products');
     return Orders;
   }
 
