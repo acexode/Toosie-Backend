@@ -46,7 +46,8 @@ const orderSchema: Schema = new Schema({
       address: String,
       city: String,
       state: String,
-      postalCode: String
+      postalCode: String,
+      addressDeliveryCost: Number
     }
 },
 {
