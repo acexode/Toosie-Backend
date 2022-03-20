@@ -31,9 +31,6 @@ export class CreateProductsDTO {
   @IsArray()
   public resourceImages: string[];
 
-  @IsString()
-  public shortSummary: string;
-
   @IsBoolean()
   public isTrending: boolean;
 

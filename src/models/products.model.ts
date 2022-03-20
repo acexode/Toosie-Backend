@@ -16,10 +16,6 @@ const productSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-  shortSummary: {
-    type: String,
-    required: true,
-  },
   actualPrice: {
     type: String,
     required: true,
