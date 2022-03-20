@@ -38,6 +38,10 @@ const orderSchema: Schema = new Schema({
       ref: 'Product'
     }
     ],
+  orderDetails: [{
+    product: String,
+    quantity: Number,
+  }],
 	shipping:  {
       address: String,
       city: String,

@@ -27,6 +27,9 @@ export class CreateOrderDTO {
   @IsArray()
   products: string[];
 
+  @IsArray()
+  orderDetails: string[];
+
   @IsObject()
   shipping: object;
 }

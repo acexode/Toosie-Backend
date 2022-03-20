@@ -6,6 +6,7 @@ export interface IOrder {
   deliveryStatus: string;
   paymentMethod: string;
   totalCost: number;
-  products: string;
+  products: [];
+  orderDetails: [];
   shipping: object;
 }
