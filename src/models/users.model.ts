@@ -35,6 +35,11 @@ const userSchema: Schema = new Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  address: {
+    state: String,
+    localGov: String,
+    address: String,
+  }
 },
 {
   timestamps: true,

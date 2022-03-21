@@ -1,7 +1,6 @@
-import { IsEmail, IsString, IsOptional } from 'class-validator';
+import { IsEmail, IsString, IsOptional, IsObject } from 'class-validator';
 
 export class CreateUserDto {
-
   @IsEmail()
   public email: string;
 
@@ -10,12 +9,11 @@ export class CreateUserDto {
 
   @IsString()
   public fullName: string;
-  
+
   @IsString()
   public phone: string;
 }
 export class UpdateUserDto {
-
   @IsOptional()
   @IsEmail()
   public email: string;
@@ -27,7 +25,7 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   public fullName: string;
-  
+
   @IsString()
   @IsOptional()
   public phone: string;
@@ -43,6 +41,10 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   public resetToken: string;
+
+  @IsObject()
+  @IsOptional()
+  public address: object;
 }
 
 export class LoginDto {
