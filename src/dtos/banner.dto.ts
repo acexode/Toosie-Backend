@@ -8,7 +8,7 @@ export class CreateBannerDTO {
   banners: string[];
 
   @IsArray()
-  text: object[];
+  textContent: object[];
 
   @IsBoolean()
   current: boolean;

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 export interface IBanner {
   banners: [];
-  text: [];
+  textContent: [];
   current: boolean;
 }

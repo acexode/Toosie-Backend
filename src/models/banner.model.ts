@@ -7,19 +7,16 @@ const bannerSchema: Schema = new Schema({
     type: [],
     required: true,
   },
-  text: [
+  textContent: [
     {
       header: String,
-      subText: Number,
+      subTitle: String,
     }
   ],
   current: {
     type: Boolean,
     required: true,
   },
-},
-{
-  timestamps: true,
 });
 
 const BannerModel = model<IBanner & Document>('Banner', bannerSchema);
