@@ -11,6 +11,7 @@ import CategoryRoute from '@routes/category.route';
 import ProductRoute from '@routes/products.route';
 import validateEnv from '@utils/validateEnv';
 import OrderRoute from './routes/order.route';
+import BannerRoute from './routes/banner.route';
 
 validateEnv();
 
@@ -23,6 +24,7 @@ const app = new App([
   new ProductRoute(),
   new CategoryRoute(),
   new OrderRoute(),
+  new BannerRoute(),
 ]);
 
 app.listen();
