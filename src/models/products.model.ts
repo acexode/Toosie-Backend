@@ -56,6 +56,12 @@ const productSchema: Schema = new Schema({
 {
   timestamps: true,
 });
+productSchema.index({
+  title: 'text',
+  brand: 'text',
+  description: 'text',
+  category: 'text',
+})
 
 const ProductModel = model<IProducts & Document>('Product', productSchema);
 

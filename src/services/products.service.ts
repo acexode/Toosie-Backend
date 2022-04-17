@@ -16,6 +16,10 @@ class ProductService {
     const Products: IProducts[] = await this.Products.find(query);
     return Products;
   }
+  public async searchProduct(query): Promise<IProducts[]> {
+    const Products: IProducts[] = await this.Products.find({ $text : { $search : query.searchString } });
+    return Products;
+  }
 
   public async findProductById(ProductId: string): Promise<IProducts> {
     if (isEmpty(ProductId)) throw new HttpException(400, "You're not ProductId");
