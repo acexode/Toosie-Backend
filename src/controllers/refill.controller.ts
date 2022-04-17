@@ -9,7 +9,7 @@ class RefillController {
 
   public getRefills = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllRefillsData: IRefill[] = await this.RefillService.findAllRefill();
+      const findAllRefillsData: IRefill[] = await this.RefillService.findAllRefill(req.query);
 
       res.status(200).json({ data: findAllRefillsData, message: 'findAll' });
     } catch (error) {

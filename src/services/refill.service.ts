@@ -10,8 +10,8 @@ import RefillModel from '@/models/refill.model';
 class RefillService {
   public RefillS = RefillModel;
 
-  public async findAllRefill(): Promise<IRefill[]> {
-    const refill: IRefill[] = await this.RefillS.find();
+  public async findAllRefill(query): Promise<IRefill[]> {
+    const refill: IRefill[] = await this.RefillS.find(query);
     return refill;
   }
 
