@@ -15,12 +15,13 @@ import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import EmailService from './services/mailer.service';
 
 class App {
   public app: express.Application;
   public port: string | number;
   public env: string;
-
+  public emailS = new EmailService();
   constructor(routes: Routes[]) {
     this.app = express();
     this.port = process.env.PORT || 3000;
@@ -31,6 +32,7 @@ class App {
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
+    this.emailS.verificationToken();
   }
 
   public listen() {
