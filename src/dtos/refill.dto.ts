@@ -22,5 +22,5 @@ export class CreateRefillDTO {
   otherInformation: string;
 
   @IsString()
-  productId: string;
+  orderId: string;
 }

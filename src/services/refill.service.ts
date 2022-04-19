@@ -27,10 +27,17 @@ class RefillService {
   public async createRefill(RefillData: CreateRefillDTO): Promise<IRefill> {
     if (isEmpty(RefillData)) throw new HttpException(400, "You're not RefillData");
 
-    const findRefill: IRefill = await this.RefillS.findOne({ Refill: RefillData.productId, customerId: RefillData.customerId });
-    if (findRefill) throw new HttpException(409, `Refill with this ${RefillData.productId} already exists`);
+    const findRefill: IRefill = await this.RefillS.findOne({ Refill: RefillData.orderId, customerId: RefillData.customerId });
+    if (findRefill) throw new HttpException(409, `Refill with this ${RefillData.orderId} already exists`);
 
-    const createRefillData: IRefill = await this.RefillS.create(RefillData);
+    const today = new Date(RefillData.startDate);
+    const nextDate = new Date();
+    nextDate.setDate(today.getDate() + parseInt(RefillData.frequency));
+    const newObj = {
+      ...RefillData,
+      nextRefillDate: nextDate
+    }
+    const createRefillData: IRefill = await this.RefillS.create(newObj);
 
     return createRefillData;
   }

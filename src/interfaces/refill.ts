@@ -5,6 +5,7 @@ export interface IRefill {
   prescriptionImage: [];
   frequency: string;
   startDate: Date;
+  nextRefillDate: Date;
   otherInformation: string;
-  productId: [string];
+  orderId: string;
 }

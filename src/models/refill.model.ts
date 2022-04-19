@@ -24,14 +24,18 @@ const refillSchema: Schema = new Schema({
     type: Date,
     required: true,
   },
+  nextRefillDate: {
+    type: Date,
+    required: true,
+  },
   otherInformation: {
     type: String,
     required: true,
   },
-  productId: {
+  orderId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Product'
+    ref: 'Order'
   },
 
 },
