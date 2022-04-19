@@ -11,7 +11,13 @@ class RefillService {
   public RefillS = RefillModel;
 
   public async findAllRefill(query): Promise<IRefill[]> {
-    const refill: IRefill[] = await this.RefillS.find(query).populate("orderId");
+    const refill: IRefill[] = await this.RefillS.find(query).populate({ 
+      path: 'orderId',
+      populate: {
+        path: 'products',
+        model: 'Product'
+      } 
+   })
     return refill;
   }
 
