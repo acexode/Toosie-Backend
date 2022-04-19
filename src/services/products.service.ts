@@ -8,7 +8,6 @@ import ProductModel from '@/models/products.model';
 
 import 'dotenv/config';
 
-
 class ProductService {
   public Products = ProductModel;
 
@@ -17,11 +16,14 @@ class ProductService {
     return Products;
   }
   public async searchProduct(query): Promise<IProducts[]> {
-    const regex = new RegExp(query,'i');
-    // const Products: IProducts[] = await this.Products.find({ $text : { $search : query.searchString } });
-    const Products: IProducts[] = await this.Products.
-    find({ $and: [ { $or: [{title: regex },{description: regex}] } ] });
-    return Products;
+    const regex = new RegExp(query, 'i');
+    console.log('REGEX', regex, query);
+    const Products: IProducts[] = await this.Products.find({ $text: { $search: query.searchText } });
+    const ProductsT: IProducts[] = await this.Products.find({ tags: query.searchText });
+    console.log(ProductsT);
+    // const Products: IProducts[] = await this.Products.
+    // find({ $and: [ { $or: [{title: regex },{description: regex}] } ] });
+    return [...Products, ...ProductsT];
   }
 
   public async findProductById(ProductId: string): Promise<IProducts> {
@@ -64,19 +66,19 @@ class ProductService {
 
     return deleteProductById;
   }
-  public fileFilter(req, file, cb){
+  public fileFilter(req, file, cb) {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true)
+      cb(null, true);
     } else {
       //reject file
-      cb({
-        message: 'Unsupported file format'
-      }, false)
+      cb(
+        {
+          message: 'Unsupported file format',
+        },
+        false,
+      );
     }
   }
-
-
 }
 
 export default ProductService;
-

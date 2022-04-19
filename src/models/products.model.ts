@@ -27,6 +27,7 @@ const productSchema: Schema = new Schema({
   tags: {
     type: [],
     required: false,
+    index: true,
   },
   brand: {
     type: String,
@@ -57,6 +58,7 @@ const productSchema: Schema = new Schema({
   timestamps: true,
 });
 productSchema.index({
+  tags: 'text',
   title: 'text',
   brand: 'text',
   description: 'text',
