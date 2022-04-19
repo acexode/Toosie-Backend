@@ -16,10 +16,10 @@ class ProductService {
     return Products;
   }
   public async searchProduct(query): Promise<IProducts[]> {
-    const regex = new RegExp(query, 'i');
+    const regex = new RegExp(query.searchText, 'i');
     console.log('REGEX', regex, query);
     const Products: IProducts[] = await this.Products.find({ $text: { $search: query.searchText } });
-    const ProductsT: IProducts[] = await this.Products.find({ tags: query.searchText });
+    const ProductsT: IProducts[] = await this.Products.find({ tags: regex });
     console.log(ProductsT);
     // const Products: IProducts[] = await this.Products.
     // find({ $and: [ { $or: [{title: regex },{description: regex}] } ] });
