@@ -11,7 +11,10 @@ const userSchema: Schema = new Schema({
   fullName: {
     type: String,
     required: true,
-    unique: true,
+  },
+  avater: {
+    type: String,
+    required: true,
   },
   phone: {
     type: String,

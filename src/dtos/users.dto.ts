@@ -28,6 +28,10 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
+  public avater: string;
+
+  @IsString()
+  @IsOptional()
   public phone: string;
 
   @IsString()
