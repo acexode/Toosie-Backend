@@ -58,3 +58,13 @@ export class LoginDto {
   @IsString()
   public password: string;
 }
+export class ChangePasswordDto {
+  @IsEmail()
+  public email: string;
+
+  @IsString()
+  public oldPassword: string;
+
+  @IsString()
+  public newPassword: string;
+}

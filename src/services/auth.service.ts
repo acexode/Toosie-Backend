@@ -1,3 +1,4 @@
+import { ChangePasswordDto } from './../dtos/users.dto';
 import { UserEmail } from './../interfaces/users.interface';
 import bcrypt from 'bcrypt';
 import config from 'config';
@@ -34,6 +35,21 @@ class AuthService {
     if (!isPasswordMatching) throw new HttpException(409, "You're password not matching");
 
     const tokenData = this.createToken(findUser);
+
+    return { token: tokenData, findUser };
+  }
+  public async changePassword(userData: ChangePasswordDto): Promise<{ token: any; findUser: User }> {
+    if (isEmpty(userData)) throw new HttpException(400, 'userData cant be empty');
+
+    const findUser: User = await this.users.findOne({ email: userData.email });
+    if (!findUser) throw new HttpException(409, `Your email ${userData.email} is not found`);
+
+    const isPasswordMatching: boolean = await bcrypt.compare(userData.oldPassword, findUser.password);
+    if (!isPasswordMatching) throw new HttpException(409, 'Your password not matching');
+
+    const hashedPassword = await bcrypt.hash(userData.newPassword, 10);
+    const updatedUser: User = await this.users.findOneAndUpdate({ email: userData.email }, { $set: { password: hashedPassword } }, { new: true });
+    const tokenData = this.createToken(updatedUser);
 
     return { token: tokenData, findUser };
   }

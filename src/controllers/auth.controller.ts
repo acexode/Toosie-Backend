@@ -1,3 +1,4 @@
+import { ChangePasswordDto } from './../dtos/users.dto';
 import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
@@ -24,6 +25,16 @@ class AuthController {
       const { token, findUser } = await this.authService.login(userData);
 
       res.status(200).json({ data: findUser, token, message: 'login' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public changePassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: ChangePasswordDto = req.body;
+      const { token, findUser } = await this.authService.changePassword(userData);
+
+      res.status(200).json({ data: findUser, token, message: 'password changed successfully' });
     } catch (error) {
       next(error);
     }
