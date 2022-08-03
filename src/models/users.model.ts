@@ -14,7 +14,6 @@ const userSchema: Schema = new Schema({
   },
   avater: {
     type: String,
-    required: true,
   },
   phone: {
     type: String,
