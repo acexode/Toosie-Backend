@@ -1,3 +1,5 @@
+import { sendEmail } from './../utils/email';
+import { generateOTP } from './../utils/util';
 import { ChangePasswordDto } from './../dtos/users.dto';
 import { UserEmail } from './../interfaces/users.interface';
 import bcrypt from 'bcrypt';
@@ -20,7 +22,16 @@ class AuthService {
     if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
+    const otp = generateOTP();
+    const msg = {
+      to: userData.email, // Change to your recipient
+      from: process.env.Email, // Change to your verified sender
+      subject: 'TOOSIE OTP VERIFICATION',
+      text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
+      html: `<strong>${otp}</strong>`,
+    };
+    sendEmail(msg);
+    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp });
 
     return createUserData;
   }

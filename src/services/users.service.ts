@@ -41,7 +41,7 @@ class UserService {
       html: `<strong>${otp}</strong>`,
     };
     sendEmail(msg);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp });
+    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp: otp });
 
     return createUserData;
   }
