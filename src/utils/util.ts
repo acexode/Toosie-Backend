@@ -1,4 +1,3 @@
-const otpGenerator = require('otp-generator');
 /**
  * @method isEmpty
  * @param {String | Number | Object} value
@@ -32,6 +31,5 @@ export const uuidv4 = () => {
   return result;
 };
 export const generateOTP = () => {
-  const OTP = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
-  return OTP;
+  return Math.floor(100000 + Math.random() * 900000);
 };
