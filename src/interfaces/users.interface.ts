@@ -15,3 +15,8 @@ export interface User {
 export interface UserEmail {
   email: string;
 }
+export interface PasswordResetComplete {
+  email: string;
+  password: string;
+  verificationCode: string;
+}

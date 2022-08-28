@@ -2,7 +2,7 @@ import { ChangePasswordDto, OTPDTO } from './../dtos/users.dto';
 import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
-import { User } from '@interfaces/users.interface';
+import { PasswordResetComplete, User, UserEmail } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
 import UserService from '@/services/users.service';
 
@@ -27,6 +27,26 @@ class AuthController {
       const { token, findUser } = await this.authService.login(userData);
 
       res.status(200).json({ data: findUser, token, message: 'login' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public requestPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: UserEmail = req.body;
+      await this.authService.requestPasswordReset(userData);
+
+      res.status(200).json({ message: 'Password reset code has been sent to your email, check your inbox and spam messages' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public passwordResetComplete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: PasswordResetComplete = req.body;
+      const data = await this.authService.passwordResetComplete(userData);
+
+      res.status(200).json({ data: data, message: 'Password reset complete, login' });
     } catch (error) {
       next(error);
     }

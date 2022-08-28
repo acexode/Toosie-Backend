@@ -1,7 +1,7 @@
 import { sendEmail } from './../utils/email';
 import { generateOTP } from './../utils/util';
 import { ChangePasswordDto } from './../dtos/users.dto';
-import { UserEmail } from './../interfaces/users.interface';
+import { UserEmail, PasswordResetComplete } from './../interfaces/users.interface';
 import bcrypt from 'bcrypt';
 import config from 'config';
 import jwt from 'jsonwebtoken';
@@ -28,7 +28,7 @@ class AuthService {
       from: process.env.Email, // Change to your verified sender
       subject: 'TOOSIE OTP VERIFICATION',
       text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
-      html: `<strong>${otp}</strong>`,
+      html: `Your One Time Password (OTP) for Toosie app is<strong>${otp}</strong>`,
     };
     sendEmail(msg);
     const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp });
@@ -86,8 +86,24 @@ class AuthService {
 
     const findUser: User = await this.users.findOne({ email: userData.email });
     if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
+    const otp = generateOTP();
+    const msg = {
+      to: userData.email, // Change to your recipient
+      from: process.env.Email, // Change to your verified sender
+      subject: 'TOOSIE PASSWORD RESET',
+      html: `Use this reset code to change your password <strong>${otp}</strong>`,
+    };
+    sendEmail(msg);
+  }
+  public async passwordResetComplete(userData: PasswordResetComplete) {
+    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    return findUser;
+    const findUser: User = await this.users.findOne({ email: userData.email });
+    if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const updateUserById: User = await this.users.findByIdAndUpdate(findUser._id, { $set: { password: hashedPassword } }, { new: true });
+    if (!updateUserById) throw new HttpException(409, 'Failed to reset password');
+    return updateUserById;
   }
 
   public createCookie(tokenData: TokenData): string {
