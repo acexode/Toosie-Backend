@@ -1,3 +1,4 @@
+const otpGenerator = require('otp-generator');
 /**
  * @method isEmpty
  * @param {String | Number | Object} value
@@ -29,4 +30,8 @@ export const uuidv4 = () => {
     result = result + i;
   }
   return result;
+};
+export const generateOTP = () => {
+  const OTP = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
+  return OTP;
 };

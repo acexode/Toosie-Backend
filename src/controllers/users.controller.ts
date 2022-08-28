@@ -1,3 +1,4 @@
+import { OTPDTO } from './../dtos/users.dto';
 import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
@@ -38,6 +39,17 @@ class UsersController {
     }
   };
 
+  public verifyUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: string = req.params.id;
+      const userData: OTPDTO = req.body;
+      const updateUserData: User = await this.userService.verifyUser(userId, userData);
+
+      res.status(200).json({ data: updateUserData, message: 'Account activated' });
+    } catch (error) {
+      next(error);
+    }
+  };
   public updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId: string = req.params.id;

@@ -33,6 +33,10 @@ const userSchema: Schema = new Schema({
     type: Boolean,
     default: false,
   },
+  otp: {
+    type: String,
+    required: true,
+  },
   userType: {
     type: String,
     enum: ['user', 'admin'],

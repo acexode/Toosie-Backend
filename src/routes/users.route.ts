@@ -1,4 +1,4 @@
-import { UpdateUserDto } from './../dtos/users.dto';
+import { UpdateUserDto, OTPDTO } from './../dtos/users.dto';
 import { Router } from 'express';
 import UsersController from '@controllers/users.controller';
 import { CreateUserDto } from '@dtos/users.dto';
@@ -19,6 +19,7 @@ class UsersRoute implements Routes {
     this.router.get(`${this.path}/:id`, this.usersController.getUserById);
     this.router.post(`${this.path}`, validationMiddleware(CreateUserDto, 'body'), this.usersController.createUser);
     this.router.put(`${this.path}/:id`, validationMiddleware(UpdateUserDto, 'body', true), this.usersController.updateUser);
+    this.router.put(`${this.path}/activate?:id`, validationMiddleware(OTPDTO, 'body', true), this.usersController.verifyUser);
     this.router.delete(`${this.path}/:id`, this.usersController.deleteUser);
   }
 }

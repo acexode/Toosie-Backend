@@ -1,3 +1,6 @@
+import { OTPDTO } from './../dtos/users.dto';
+import { sendEmail } from './../utils/email';
+import { generateOTP } from './../utils/util';
 import bcrypt from 'bcrypt';
 import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
@@ -29,11 +32,35 @@ class UserService {
     if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
+    const otp = generateOTP();
+    const msg = {
+      to: userData.email, // Change to your recipient
+      from: process.env.Email, // Change to your verified sender
+      subject: 'TOOSIE OTP VERIFICATION',
+      text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
+      html: `<strong>${otp}</strong>`,
+    };
+    sendEmail(msg);
+    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp });
 
     return createUserData;
   }
 
+  public async verifyUser(userId: string, userData: OTPDTO): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+
+    const findUser: User = await this.users.findOne({ email: userData.email });
+    if (!findUser) throw new HttpException(409, `User not found`);
+
+    if (userData.otp !== findUser.otp) {
+      throw new HttpException(409, `Invalid OTP`);
+    }
+
+    const updateUserById: User = await this.users.findByIdAndUpdate(userId, { $set: { isActivated: true } }, { new: true });
+    if (!updateUserById) throw new HttpException(409, "You're not user");
+
+    return updateUserById;
+  }
   public async updateUser(userId: string, userData: UpdateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 

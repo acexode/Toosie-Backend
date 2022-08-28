@@ -9,6 +9,7 @@ export interface User {
   userType: string;
   isAdmin: string;
   resetToken: string;
+  otp?: string;
   address: object;
 }
 export interface UserEmail {
