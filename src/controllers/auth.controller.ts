@@ -1,12 +1,14 @@
-import { ChangePasswordDto } from './../dtos/users.dto';
+import { ChangePasswordDto, OTPDTO } from './../dtos/users.dto';
 import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
+import UserService from '@/services/users.service';
 
 class AuthController {
   public authService = new AuthService();
+  public userService = new UserService();
 
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -25,6 +27,17 @@ class AuthController {
       const { token, findUser } = await this.authService.login(userData);
 
       res.status(200).json({ data: findUser, token, message: 'login' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public verifyUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: string = req.params.id;
+      const userData: OTPDTO = req.body;
+      const updateUserData: User = await this.userService.verifyUser(userId, userData);
+
+      res.status(200).json({ data: updateUserData, message: 'Account activated' });
     } catch (error) {
       next(error);
     }

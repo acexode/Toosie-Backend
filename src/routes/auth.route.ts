@@ -1,4 +1,4 @@
-import { LoginDto, ChangePasswordDto } from './../dtos/users.dto';
+import { LoginDto, ChangePasswordDto, OTPDTO } from './../dtos/users.dto';
 import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
 import { CreateUserDto } from '@dtos/users.dto';
@@ -18,6 +18,7 @@ class AuthRoute implements Routes {
   private initializeRoutes() {
     this.router.post(`${this.path}signup`, validationMiddleware(CreateUserDto, 'body'), this.authController.signUp);
     this.router.post(`${this.path}login`, validationMiddleware(LoginDto, 'body'), this.authController.logIn);
+    this.router.post(`${this.path}/register/activate`, validationMiddleware(OTPDTO, 'body'), this.authController.verifyUser);
     this.router.post(`${this.path}change-password`, validationMiddleware(ChangePasswordDto, 'body'), this.authController.changePassword);
     this.router.post(`${this.path}logout`, authMiddleware, this.authController.logOut);
   }
