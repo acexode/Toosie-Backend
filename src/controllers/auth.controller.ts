@@ -41,6 +41,16 @@ class AuthController {
       next(error);
     }
   };
+  public resendOTP = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: UserEmail = req.body;
+      await this.authService.resendOTP(userData);
+
+      res.status(200).json({ message: 'OTP code has been sent to your email, check your inbox and spam messages' });
+    } catch (error) {
+      next(error);
+    }
+  };
   public passwordResetComplete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: PasswordResetComplete = req.body;

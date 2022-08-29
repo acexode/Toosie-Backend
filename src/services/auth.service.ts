@@ -35,6 +35,25 @@ class AuthService {
 
     return createUserData;
   }
+  public async resendOTP(userData: UserEmail): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+
+    const findUser: User = await this.users.findOne({ email: userData.email });
+    if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
+
+    const otp = generateOTP();
+    const msg = {
+      to: userData.email, // Change to your recipient
+      from: process.env.Email, // Change to your verified sender
+      subject: 'TOOSIE OTP VERIFICATION',
+      text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
+      html: `Your One Time Password (OTP) for Toosie app is<strong>${otp}</strong>`,
+    };
+    sendEmail(msg);
+    const updateUserById: User = await this.users.findByIdAndUpdate(findUser._id, { $set: { otp: otp } }, { new: true });
+    if (!updateUserById) throw new HttpException(409, "You're not user");
+    return updateUserById;
+  }
 
   public async login(userData: LoginDto): Promise<{ token: any; findUser: User }> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
