@@ -39,7 +39,7 @@ class AuthService {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser: User = await this.users.findOne({ email: userData.email });
-    if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
+    if (!findUser) throw new HttpException(409, `You're email ${userData.email} doesnt exist exists`);
 
     const otp = generateOTP();
     const msg = {
