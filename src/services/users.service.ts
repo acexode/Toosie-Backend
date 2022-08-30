@@ -57,7 +57,7 @@ class UserService {
     }
 
     const updateUserById: User = await this.users.findByIdAndUpdate(userId, { $set: { isActivated: true } }, { new: true });
-    if (!updateUserById) throw new HttpException(409, "You're not user");
+    // if (!updateUserById) throw new HttpException(409, "You're not user");
 
     return updateUserById;
   }
