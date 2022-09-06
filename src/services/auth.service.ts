@@ -18,33 +18,33 @@ class AuthService {
   public async signup(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
     if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     const otp = generateOTP();
     const msg = {
-      to: userData.email, // Change to your recipient
-      from: process.env.Email, // Change to your verified sender
+      to: userData.email.toLowerCase(), // Change to your recipient
+      from: process.env.Email.toLowerCase(), // Change to your verified sender
       subject: 'TOOSIE OTP VERIFICATION',
       text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
       html: `Your One Time Password (OTP) for Toosie app is<strong>${otp}</strong>`,
     };
     sendEmail(msg);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp });
+    const createUserData: User = await this.users.create({ ...userData, email: userData.email.toLowerCase(), password: hashedPassword, otp });
 
     return createUserData;
   }
   public async resendOTP(userData: UserEmail): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
     if (!findUser) throw new HttpException(409, `You're email ${userData.email} doesnt exist exists`);
 
     const otp = generateOTP();
     const msg = {
-      to: userData.email, // Change to your recipient
-      from: process.env.Email, // Change to your verified sender
+      to: userData.email.toLowerCase(), // Change to your recipient
+      from: process.env.Email.toLowerCase(), // Change to your verified sender
       subject: 'TOOSIE OTP VERIFICATION',
       text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
       html: `Your One Time Password (OTP) for Toosie app is<strong>${otp}</strong>`,
@@ -58,7 +58,7 @@ class AuthService {
   public async login(userData: LoginDto): Promise<{ token: any; findUser: User }> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
     if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
 
     const isPasswordMatching: boolean = await bcrypt.compare(userData.password, findUser.password);
@@ -71,14 +71,18 @@ class AuthService {
   public async changePassword(userData: ChangePasswordDto): Promise<{ token: any; findUser: User }> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData cant be empty');
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
     if (!findUser) throw new HttpException(409, `Your email ${userData.email} is not found`);
 
     const isPasswordMatching: boolean = await bcrypt.compare(userData.oldPassword, findUser.password);
     if (!isPasswordMatching) throw new HttpException(409, 'Your password not matching');
 
     const hashedPassword = await bcrypt.hash(userData.newPassword, 10);
-    const updatedUser: User = await this.users.findOneAndUpdate({ email: userData.email }, { $set: { password: hashedPassword } }, { new: true });
+    const updatedUser: User = await this.users.findOneAndUpdate(
+      { email: userData.email.toLowerCase() },
+      { $set: { password: hashedPassword } },
+      { new: true },
+    );
     const tokenData = this.createToken(updatedUser);
 
     return { token: tokenData, findUser };
@@ -87,7 +91,7 @@ class AuthService {
   public async logout(userData: User): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ email: userData.email, password: userData.password });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase(), password: userData.password });
     if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
 
     return findUser;
@@ -103,12 +107,12 @@ class AuthService {
   public async requestPasswordReset(userData: UserEmail) {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
     if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
     const otp = generateOTP();
     const msg = {
-      to: userData.email, // Change to your recipient
-      from: process.env.Email, // Change to your verified sender
+      to: userData.email.toLowerCase(), // Change to your recipient
+      from: process.env.Email.toLowerCase(), // Change to your verified sender
       subject: 'TOOSIE PASSWORD RESET',
       html: `Use this reset code to change your password <strong>${otp}</strong>`,
     };
@@ -117,7 +121,7 @@ class AuthService {
   public async passwordResetComplete(userData: PasswordResetComplete) {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ email: userData.email });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
     if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     const updateUserById: User = await this.users.findByIdAndUpdate(findUser._id, { $set: { password: hashedPassword } }, { new: true });
