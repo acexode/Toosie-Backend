@@ -67,7 +67,7 @@ class AuthController {
       const userData: OTPDTO = req.body;
       const updateUserData = await this.userService.verifyUser(userId, userData);
 
-      res.status(200).json({ data: updateUserData, message: 'Account activated' });
+      res.status(200).json({ updateUserData, message: 'Account activated' });
     } catch (error) {
       next(error);
     }

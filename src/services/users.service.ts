@@ -60,8 +60,8 @@ class UserService {
 
     const user: User = await this.users.findByIdAndUpdate(userId, { $set: { isActivated: true } }, { new: true });
     // if (!updateUserById) throw new HttpException(409, "You're not user");
-    const tokenData = this.authS.createToken(findUser);
-    return { user, token: tokenData };
+    const token = this.authS.createToken(findUser);
+    return { user, token };
   }
   public async updateUser(userId: string, userData: UpdateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
