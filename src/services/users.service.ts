@@ -51,7 +51,7 @@ class UserService {
 
     const findUser: User = await this.users.findOne({ email: userData.email });
     if (!findUser) throw new HttpException(409, `User not found`);
-
+    console.log(userData, findUser);
     if (parseInt(userData.otp) !== parseInt(findUser.otp)) {
       throw new HttpException(409, `Invalid OTP`);
     }
