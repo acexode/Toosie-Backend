@@ -1,3 +1,4 @@
+import AuthService from '@services/auth.service';
 import { OTPDTO } from './../dtos/users.dto';
 import { sendEmail } from './../utils/email';
 import { generateOTP } from './../utils/util';
@@ -10,6 +11,7 @@ import { isEmpty } from '@utils/util';
 
 class UserService {
   public users = userModel;
+  public authS = new AuthService();
 
   public async findAllUser(): Promise<User[]> {
     const users: User[] = await this.users.find();
@@ -46,7 +48,7 @@ class UserService {
     return createUserData;
   }
 
-  public async verifyUser(userId: string, userData: OTPDTO): Promise<User> {
+  public async verifyUser(userId: string, userData: OTPDTO): Promise<{ token: any; user: User }> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser: User = await this.users.findOne({ email: userData.email });
@@ -56,10 +58,10 @@ class UserService {
       throw new HttpException(409, `Invalid OTP`);
     }
 
-    const updateUserById: User = await this.users.findByIdAndUpdate(userId, { $set: { isActivated: true } }, { new: true });
+    const user: User = await this.users.findByIdAndUpdate(userId, { $set: { isActivated: true } }, { new: true });
     // if (!updateUserById) throw new HttpException(409, "You're not user");
-
-    return updateUserById;
+    const tokenData = this.authS.createToken(findUser);
+    return { user, token: tokenData };
   }
   public async updateUser(userId: string, userData: UpdateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
