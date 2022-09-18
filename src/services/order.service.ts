@@ -36,7 +36,7 @@ class OrderService {
     return createOrderData;
   }
 
-  public async updateOrder(OrderId: string, OrderData: CreateOrderDTO): Promise<IOrder> {
+  public async updateOrder(OrderId: string, OrderData): Promise<IOrder> {
     if (isEmpty(OrderData)) throw new HttpException(400, "You're not OrderData");
 
     if (OrderId) {
@@ -46,7 +46,7 @@ class OrderService {
     }
     console.log(OrderData)
 
-    const updateOrderById = await this.Orders.findByIdAndUpdate(OrderId, OrderData, {new: true} );
+    const updateOrderById = await this.Orders.findByIdAndUpdate(OrderId, OrderData);
     if (!updateOrderById) throw new HttpException(409, 'Failed to update Order');
 
     return updateOrderById;
