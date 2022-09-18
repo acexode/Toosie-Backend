@@ -41,10 +41,12 @@ class OrderService {
 
     if (OrderId) {
       const findOrder: IOrder = await this.Orders.findOne({ _id: OrderId });
+      console.log(findOrder)
       if (!findOrder) throw new HttpException(409, `Order does not  exists`);
     }
+    console.log(OrderData)
 
-    const updateOrderById: IOrder = await this.Orders.findByIdAndUpdate(OrderId, { OrderData });
+    const updateOrderById = await this.Orders.findByIdAndUpdate(OrderId, OrderData, {new: true} );
     if (!updateOrderById) throw new HttpException(409, 'Failed to update Order');
 
     return updateOrderById;
