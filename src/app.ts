@@ -24,7 +24,7 @@ class App {
   // public emailS = new EmailService();
   constructor(routes: Routes[]) {
     this.app = express();
-    this.port = process.env.PORT || 3000;
+    this.port = process.env.PORT;
     this.env = process.env.NODE_ENV || 'development';
     console.log(this.env);
     this.connectToDatabase();
