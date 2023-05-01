@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
 import userService from '@services/users.service';
+import { UserAddress } from '@/interfaces/user-address.interface';
 
 class UsersController {
   public userService = new userService();
@@ -32,6 +33,16 @@ class UsersController {
     try {
       const userData: CreateUserDto = req.body;
       const createUserData: User = await this.userService.createUser(userData);
+
+      res.status(201).json({ data: createUserData, message: 'created' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public createUserAddress = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: UserAddress = req.body;
+      const createUserData: User = await this.userService.createUserAddress(userData);
 
       res.status(201).json({ data: createUserData, message: 'created' });
     } catch (error) {

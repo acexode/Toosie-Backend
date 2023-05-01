@@ -10,7 +10,7 @@ export interface User {
   isAdmin: string;
   resetToken: string;
   otp?: string;
-  address: object;
+  addresses: [];
 }
 export interface UserEmail {
   email: string;

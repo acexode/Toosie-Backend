@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { IsString, IsArray, IsObject, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsObject, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateOrderDTO {
   @IsString()
@@ -20,6 +20,12 @@ export class CreateOrderDTO {
 
   @IsString()
   paymentMethod: string;
+
+  @IsBoolean()
+  priorityDelivery: string;
+
+  @IsString()
+  deliveryType: string;
 
   @IsNumber()
   totalCost: number;

@@ -11,9 +11,12 @@ import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
 import { isEmpty } from '@utils/util';
+import { UserAddress } from '@/interfaces/user-address.interface';
+import userAddressModel from '@/models/user-address.model';
 
 class AuthService {
   public users = userModel;
+  public userAddresses = userAddressModel;
 
   public async signup(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
@@ -58,7 +61,7 @@ class AuthService {
   public async login(userData: LoginDto): Promise<{ token: any; findUser: User }> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
+    const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() }).populate('addresses');
     if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
 
     const isPasswordMatching: boolean = await bcrypt.compare(userData.password, findUser.password);

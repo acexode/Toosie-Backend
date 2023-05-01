@@ -16,6 +16,12 @@ const productSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  ingredients: {
+    type: String,
+  },
+  warning: {
+    type: String,
+  },
   actualPrice: {
     type: String,
     required: true,

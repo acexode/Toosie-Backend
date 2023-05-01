@@ -22,6 +22,15 @@ const orderSchema: Schema = new Schema({
     enum: ["pod", "card"],
     required: true,
   },
+  deliveryType:  {
+    type: String,
+    enum: ["delivery", "pickup"],
+    required: true,
+  },
+  priorityDelivery:  {
+    type: Boolean,
+    required: true,
+  },
   deliveryStatus:  {
     type: String,
     enum: ["pending", "delivered"],

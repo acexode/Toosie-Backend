@@ -12,6 +12,12 @@ export class CreateProductsDTO {
   @IsString()
   public description: string;
 
+  @IsString()
+  public ingredients: string;
+
+  @IsString()
+  public warning: string;
+
   @IsNumber()
   public actualPrice: number;
 

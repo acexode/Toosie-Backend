@@ -4,6 +4,8 @@ export interface IProducts {
   category: string;
   title: string;
   description: string;
+  ingredients: string;
+  warning: string;
   actualPrice: number;
   discountPercent: number;
   tags: string[];

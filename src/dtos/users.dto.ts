@@ -13,6 +13,19 @@ export class CreateUserDto {
   @IsString()
   public phone: string;
 }
+export class CreateUserAddressDto {
+  @IsString()
+  public user: string;
+
+  @IsString()
+  public state: string;
+
+  @IsString()
+  public localGov: string;
+
+  @IsString()
+  public address: string;
+}
 export class UpdateUserDto {
   @IsOptional()
   @IsEmail()

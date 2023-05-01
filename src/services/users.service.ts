@@ -8,9 +8,12 @@ import { HttpException } from '@exceptions/HttpException';
 import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
 import { isEmpty } from '@utils/util';
+import { UserAddress } from '@/interfaces/user-address.interface';
+import userAddressModel from '@/models/user-address.model';
 
 class UserService {
   public users = userModel;
+  public addresses = userAddressModel;
   public authS = new AuthService();
 
   public async findAllUser(): Promise<User[]> {
@@ -47,11 +50,28 @@ class UserService {
 
     return createUserData;
   }
+  public async createUserAddress(userData: UserAddress): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, 'No data is passed');
+    console.log(userData);
+    const findUser: User = await this.users.findOne({ email: userData.user });
+    console.log(findUser, 'founded');
+    if (!findUser) throw new HttpException(409, `User does not exist`);
+    const address = {
+      ...userData,
+      user: findUser._id,
+    };
+    const createUserData: UserAddress = await this.addresses.create({ ...address });
+    await this.users.findByIdAndUpdate(findUser._id, { $push: { addresses: createUserData } });
+    const updatedUser: User = await this.users.findOne({ email: userData.user }).populate('addresses');
+    console.log(updatedUser);
+    return updatedUser;
+  }
 
   public async verifyUser(userId: string, userData: OTPDTO): Promise<{ token: any; user: User }> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser: User = await this.users.findOne({ email: userData.email });
+
     if (!findUser) throw new HttpException(409, `User not found`);
     console.log(userData, findUser);
     if (parseInt(userData.otp) !== parseInt(findUser.otp)) {
