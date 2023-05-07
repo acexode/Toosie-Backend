@@ -19,11 +19,13 @@ class ProductService {
     const regex = new RegExp(query.searchText, 'i');
     console.log('REGEX', regex, query);
     const Products: IProducts[] = await this.Products.find({ $text: { $search: query.searchText } });
+    const ProductsTitle: IProducts[] = await this.Products.find({ title: {$regex: regex}});
     const ProductsT: IProducts[] = await this.Products.find({ tags: regex });
+    const ProductsDescription: IProducts[] = await this.Products.find({ description: regex });
     console.log(ProductsT);
     // const Products: IProducts[] = await this.Products.
     // find({ $and: [ { $or: [{title: regex },{description: regex}] } ] });
-    return [...Products, ...ProductsT];
+    return [...Products, ...ProductsT, ...ProductsDescription];
   }
 
   public async findProductById(ProductId: string): Promise<IProducts> {
@@ -53,8 +55,9 @@ class ProductService {
       const findProduct: IProducts = await this.Products.findOne({ _id: ProductId });
       if (!findProduct) throw new HttpException(409, `Product does not  exists`);
     }
+    console.log(ProductId);
 
-    const updateProductById: IProducts = await this.Products.findByIdAndUpdate(ProductId, { ProductData });
+    const updateProductById: IProducts = await this.Products.findByIdAndUpdate(ProductId,  ProductData );
     if (!updateProductById) throw new HttpException(409, 'Failed to update Product');
 
     return updateProductById;

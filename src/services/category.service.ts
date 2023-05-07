@@ -42,7 +42,7 @@ class CategoryService {
       if (!findCategory) throw new HttpException(409, `Category does not  exists`);
     }
 
-    const updateCategoryById: ICategory = await this.Categorys.findByIdAndUpdate(CategoryId, { CategoryData });
+    const updateCategoryById: ICategory = await this.Categorys.findByIdAndUpdate(CategoryId,  CategoryData );
     if (!updateCategoryById) throw new HttpException(409, 'Failed to update Category');
 
     return updateCategoryById;

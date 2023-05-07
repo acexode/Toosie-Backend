@@ -6,8 +6,8 @@ export const sendEmail = obj => {
   
   sgMail
     .send(obj)
-    .then(() => {
-      console.log('Email sent');
+    .then((val) => {
+      console.log(val, 'Email sent');
     })
     .catch(error => {
       console.error(error);
