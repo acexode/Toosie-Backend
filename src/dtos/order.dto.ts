@@ -2,6 +2,23 @@
 
 import { IsString, IsArray, IsObject, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 
+class ShippingDTO {
+  @IsString()
+  address: string;
+
+  @IsString()
+  city: string;
+
+  @IsString()
+  state: string;
+
+  @IsString()
+  postalCode: string;
+
+  @IsNumber()
+  addressDeliveryCost: number;
+}
+
 export class CreateOrderDTO {
   @IsString()
   customerId: string;
@@ -37,5 +54,6 @@ export class CreateOrderDTO {
   orderDetails: string[];
 
   @IsObject()
-  shipping: object;
+  shipping: ShippingDTO;
 }
+

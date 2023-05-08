@@ -10,8 +10,10 @@ export interface User {
   isAdmin: string;
   resetToken: string;
   otp?: string;
+  loyaltyPoint?: number;
   addresses: [];
 }
+
 export interface UserEmail {
   email: string;
 }

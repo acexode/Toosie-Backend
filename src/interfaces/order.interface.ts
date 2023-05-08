@@ -9,6 +9,19 @@ export interface IOrder {
   priorityDelivery: boolean;
   totalCost: number;
   products: [];
-  orderDetails: [];
-  shipping: object;
+  orderDetails: orderDetails[];
+  shipping:  IShipping ;
+}
+
+interface orderDetails {
+  product: string;
+  quantity: number;
+}
+
+interface IShipping {
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  addressDeliveryCost: number;
 }

@@ -16,6 +16,12 @@ class UserService {
   public addresses = userAddressModel;
   public authS = new AuthService();
 
+  async updateALLUser() {
+    // console.log('upading -----');
+    // const upd = await this.users.updateMany({}, { $set: { loyaltyPoint: 0 } });
+    // console.log(upd);
+  }
+
   public async findAllUser(): Promise<User[]> {
     const users: User[] = await this.users.find();
     return users;

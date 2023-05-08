@@ -37,6 +37,11 @@ const userSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  loyaltyPoint: {
+    type: Number,
+    required: true,
+    default: 0
+  },
   userType: {
     type: String,
     enum: ['user', 'admin'],
