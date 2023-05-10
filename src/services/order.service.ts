@@ -38,8 +38,14 @@ class OrderService {
     const createOrderData: IOrder = await this.Orders.create(newOrder);
     if (OrderData.paymentStatus === 'paid') {
       const amount = 0.05 * (OrderData.totalCost - OrderData.shipping?.addressDeliveryCost);
-      userModel.findByIdAndUpdate(OrderData.customerId, { $inc: { loyaltyPoint: amount } });
+      if(OrderData.loyaltyPoint){
+        userModel.findByIdAndUpdate(OrderData.customerId, { $set: { loyaltyPoint: amount } });
+      }else{
+
+        userModel.findByIdAndUpdate(OrderData.customerId, { $inc: { loyaltyPoint: amount } });
+      }
     }
+
     return createOrderData;
   }
 

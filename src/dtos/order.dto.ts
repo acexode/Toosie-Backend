@@ -41,6 +41,10 @@ export class CreateOrderDTO {
   @IsBoolean()
   priorityDelivery: string;
 
+  @IsNumber()
+  @IsOptional()
+  loyaltyPoint: number;
+
   @IsString()
   deliveryType: string;
 
