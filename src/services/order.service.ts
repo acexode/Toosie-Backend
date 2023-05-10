@@ -55,12 +55,12 @@ class OrderService {
     console.log(findOrder);
     if (!findOrder) throw new HttpException(409, `Order does not  exists`);
 
-    if (OrderData.paymentStatus === 'paid') {
-      const amount = 0.05 * (findOrder.totalCost - findOrder.shipping?.addressDeliveryCost);
-      console.log(findOrder.totalCost, findOrder.shipping?.addressDeliveryCost, amount);
-      const user = await userModel.findByIdAndUpdate(findOrder.customerId, { $inc: { loyaltyPoint: amount } });
-      console.log(user);
-    }
+    // if (OrderData.paymentStatus === 'paid') {
+    //   const amount = 0.05 * (findOrder.totalCost - findOrder.shipping?.addressDeliveryCost);
+    //   console.log(findOrder.totalCost, findOrder.shipping?.addressDeliveryCost, amount);
+    //   const user = await userModel.findByIdAndUpdate(findOrder.customerId, { $inc: { loyaltyPoint: amount } });
+    //   console.log(user);
+    // }
     if (OrderData.deliveryStatus === 'delivered') {
       findOrder.orderDetails.forEach(async item => {
         await ProductModel.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } });
