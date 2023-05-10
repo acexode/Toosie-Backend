@@ -33,7 +33,6 @@ class OrderService {
       ...OrderData,
       paymentStatus: OrderData.paymentMethod === 'pod' ? 'pending' : 'paid',
       deliveryStatus: 'pending',
-      paymentId: uuidv4(),
     };
     const createOrderData: IOrder = await this.Orders.create(newOrder);
     if (OrderData.paymentStatus === 'paid') {
