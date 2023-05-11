@@ -53,7 +53,7 @@ class UserService {
     };
     sendEmail(msg);
     const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp: otp });
-
+    createUserData.otp = null;
     return createUserData;
   }
   public async createUserAddress(userData: UserAddress): Promise<User> {
@@ -79,13 +79,14 @@ class UserService {
     const findUser: User = await this.users.findOne({ email: userData.email });
 
     if (!findUser) throw new HttpException(409, `User not found`);
-    console.log(userData, findUser);
+    console.log(userData, userId);
     if (parseInt(userData.otp) !== parseInt(findUser.otp)) {
       throw new HttpException(409, `Invalid OTP`);
     }
 
-    const user: User = await this.users.findByIdAndUpdate(userId, { $set: { isActivated: true } }, { new: true });
+    const user: User = await this.users.findByIdAndUpdate(findUser._id, { $set: { isActivated: true } }, { new: true });
     // if (!updateUserById) throw new HttpException(409, "You're not user");
+    console.log(user);
     const token = this.authS.createToken(findUser);
     return { user, token };
   }
