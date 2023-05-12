@@ -52,7 +52,7 @@ class UserService {
       html: `<strong>${otp}</strong>`,
     };
     sendEmail(msg);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp: otp });
+    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp: otp, loyaltyPoint: 500 });
     createUserData.otp = null;
     return createUserData;
   }
