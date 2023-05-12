@@ -32,6 +32,7 @@ class OrderService {
     const newOrder = {
       ...OrderData,
       paymentStatus: OrderData.paymentMethod === 'pod' ? 'pending' : 'paid',
+      paymentId: OrderData.paymentMethod === 'pod' ? 'POD-' + uuidv4() : OrderData.paymentId,
       deliveryStatus: 'pending',
     };
     const createOrderData: IOrder = await this.Orders.create(newOrder);
