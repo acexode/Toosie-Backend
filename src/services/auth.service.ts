@@ -1,5 +1,5 @@
 import { sendEmail } from './../utils/email';
-import { generateOTP } from './../utils/util';
+import { generateOTP, generateRefererCode } from './../utils/util';
 import { ChangePasswordDto } from './../dtos/users.dto';
 import { UserEmail, PasswordResetComplete } from './../interfaces/users.interface';
 import bcrypt from 'bcrypt';
@@ -11,17 +11,19 @@ import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
 import { isEmpty } from '@utils/util';
-import { UserAddress } from '@/interfaces/user-address.interface';
 import userAddressModel from '@/models/user-address.model';
+import ReferralModel from '@/models/referral.model';
 
 class AuthService {
   public users = userModel;
   public userAddresses = userAddressModel;
+  public referModel = ReferralModel;
 
   public async signup(userData: CreateUserDto): Promise<User> {
-    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+    if (isEmpty(userData)) throw new HttpException(400, 'Empty form passed');
 
     const findUser: User = await this.users.findOne({ email: userData.email.toLowerCase() });
+    const referer: User = await this.users.findOne({ referrerToken: userData.referrerToken });
     if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -33,9 +35,21 @@ class AuthService {
       text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
       html: `Your One Time Password (OTP) for Toosie app is<strong>${otp}</strong>`,
     };
+    const rcode = generateRefererCode();
+    console.log('rcode', rcode);
+    const createUserData: User = await this.users.create({
+      ...userData,
+      password: hashedPassword,
+      otp: otp,
+      loyaltyPoint: 500,
+      referrerToken: rcode,
+    });
     sendEmail(msg);
-    const createUserData: User = await this.users.create({ ...userData, email: userData.email.toLowerCase(), password: hashedPassword, otp });
-
+    createUserData.otp = null;
+    console.log('referrer token', userData);
+    if (userData.referrerToken) {
+      await this.referModel.create({ referrer: referer._id, referee: createUserData._id, referrerToken: userData.referrerToken });
+    }
     return createUserData;
   }
   public async resendOTP(userData: UserEmail): Promise<User> {

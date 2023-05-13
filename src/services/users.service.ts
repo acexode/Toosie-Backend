@@ -47,7 +47,7 @@ class UserService {
 
     const findUser: User = await this.users.findOne({ email: userData.email });
     const referer: User = await this.users.findOne({ referrerToken: userData.referrerToken });
-    if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
+    if (findUser) throw new HttpException(409, `Email ${userData.email} already exists`);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     const otp = generateOTP();
@@ -58,8 +58,8 @@ class UserService {
       text: 'Your One Time Password (OTP) for Toosie app is ' + otp,
       html: `<strong>${otp}</strong>`,
     };
-    sendEmail(msg);
     const rcode = generateRefererCode();
+    console.log('rcode', rcode);
     const createUserData: User = await this.users.create({
       ...userData,
       password: hashedPassword,
@@ -67,7 +67,9 @@ class UserService {
       loyaltyPoint: 500,
       referrerToken: rcode,
     });
+    sendEmail(msg);
     createUserData.otp = null;
+    console.log('referrer token', userData);
     if (userData.referrerToken) {
       await this.referModel.create({ referrer: referer._id, referee: createUserData._id, referrerToken: userData.referrerToken });
     }
