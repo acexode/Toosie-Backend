@@ -68,7 +68,9 @@ class UserService {
       referrerToken: rcode,
     });
     createUserData.otp = null;
-    await this.referModel.create({ referrer: referer._id, referee: createUserData._id, referrerToken: userData.referrerToken });
+    if (userData.referrerToken) {
+      await this.referModel.create({ referrer: referer._id, referee: createUserData._id, referrerToken: userData.referrerToken });
+    }
     return createUserData;
   }
   public async createUserAddress(userData: UserAddress): Promise<User> {
