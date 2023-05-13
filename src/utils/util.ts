@@ -33,3 +33,12 @@ export const uuidv4 = () => {
 export const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000);
 };
+
+export const generateRefererCode = () => {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let retVal = '';
+  for (let i = 0, n = charset.length; i < 9; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n)).toUpperCase();
+  }
+  return retVal;
+};

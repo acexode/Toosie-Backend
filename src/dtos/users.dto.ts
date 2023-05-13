@@ -12,6 +12,10 @@ export class CreateUserDto {
 
   @IsString()
   public phone: string;
+
+  @IsString()
+  @IsOptional()
+  public referrerToken: string;
 }
 export class CreateUserAddressDto {
   @IsString()

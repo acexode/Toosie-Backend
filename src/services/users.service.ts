@@ -1,25 +1,31 @@
 import AuthService from '@services/auth.service';
 import { OTPDTO } from './../dtos/users.dto';
 import { sendEmail } from './../utils/email';
-import { generateOTP } from './../utils/util';
+
 import bcrypt from 'bcrypt';
 import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
-import { isEmpty } from '@utils/util';
+import { isEmpty, generateRefererCode, generateOTP } from '@utils/util';
 import { UserAddress } from '@/interfaces/user-address.interface';
 import userAddressModel from '@/models/user-address.model';
+import ReferralModel from '@/models/referral.model';
 
 class UserService {
   public users = userModel;
   public addresses = userAddressModel;
+  public referModel = ReferralModel;
   public authS = new AuthService();
-
+  // constructor() {
+  //   this.updateALLUser();
+  // }
   async updateALLUser() {
-    // console.log('upading -----');
-    // const upd = await this.users.updateMany({}, { $set: { loyaltyPoint: 0 } });
-    // console.log(upd);
+    // console.log('upadating -----');
+    // const users = await this.users.find();
+    // for (let index = 0; index < users.length; index++) {
+    //   await this.users.findByIdAndUpdate(users[index]._id, { $set: { referrerToken: generateRefererCode() } }, { new: true });
+    // }
   }
 
   public async findAllUser(): Promise<User[]> {
@@ -40,6 +46,7 @@ class UserService {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser: User = await this.users.findOne({ email: userData.email });
+    const referer: User = await this.users.findOne({ referrerToken: userData.referrerToken });
     if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -52,8 +59,16 @@ class UserService {
       html: `<strong>${otp}</strong>`,
     };
     sendEmail(msg);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword, otp: otp, loyaltyPoint: 500 });
+    const rcode = generateRefererCode();
+    const createUserData: User = await this.users.create({
+      ...userData,
+      password: hashedPassword,
+      otp: otp,
+      loyaltyPoint: 500,
+      referrerToken: rcode,
+    });
     createUserData.otp = null;
+    await this.referModel.create({ referrer: referer._id, referee: createUserData._id, referrerToken: userData.referrerToken });
     return createUserData;
   }
   public async createUserAddress(userData: UserAddress): Promise<User> {

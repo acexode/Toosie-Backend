@@ -42,6 +42,10 @@ const userSchema: Schema = new Schema({
     required: true,
     default: 0
   },
+  referrerToken: {
+    type: String,
+    required: true,
+  },
   userType: {
     type: String,
     enum: ['user', 'admin'],

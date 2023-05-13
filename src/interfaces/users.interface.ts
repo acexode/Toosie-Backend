@@ -11,6 +11,7 @@ export interface User {
   resetToken: string;
   otp?: string;
   loyaltyPoint?: number;
+  referrerToken?: string;
   addresses: [];
 }
 
