@@ -4,6 +4,7 @@ import request from 'supertest';
 import App from '@/app';
 import { CreateUserDto, LoginDto } from '@dtos/users.dto';
 import AuthRoute from '@routes/auth.route';
+import { generateRefererCode } from '@/utils/util';
 
 afterAll(async () => {
   await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
@@ -17,6 +18,7 @@ describe('Testing Auth', () => {
         password: 'q1w2e3r4!',
         fullName: 'Abubakar!',
         phone: '12345678',
+        referrerToken: generateRefererCode(),
       };
 
       const authRoute = new AuthRoute();

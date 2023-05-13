@@ -4,6 +4,7 @@ import request from 'supertest';
 import App from '@/app';
 import { CreateUserDto } from '@dtos/users.dto';
 import UsersRoute from '@routes/users.route';
+import { generateRefererCode } from '@/utils/util';
 
 afterAll(async () => {
   await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
@@ -65,6 +66,7 @@ describe('Testing Users', () => {
         password: 'q1w2e3r4!',
         fullName: 'Abubakar!',
         phone: '12345678',
+        referrerToken: generateRefererCode(),
       };
 
       const usersRoute = new UsersRoute();
@@ -91,6 +93,7 @@ describe('Testing Users', () => {
         password: 'q1w2e3r4!',
         fullName: 'Abubakar!',
         phone: '12345678',
+        referrerToken: generateRefererCode(),
       };
 
       const usersRoute = new UsersRoute();
