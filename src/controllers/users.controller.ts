@@ -4,6 +4,7 @@ import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
 import userService from '@services/users.service';
 import { UserAddress } from '@/interfaces/user-address.interface';
+import { IReferral } from '@/interfaces/referral.interface';
 
 class UsersController {
   public userService = new userService();
@@ -13,6 +14,15 @@ class UsersController {
       const findAllUsersData: User[] = await this.userService.findAllUser();
 
       res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getReferrals = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const allReferrals: IReferral[] = await this.userService.findAllReferrers();
+
+      res.status(200).json({ data: allReferrals, message: 'findAll' });
     } catch (error) {
       next(error);
     }

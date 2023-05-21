@@ -11,6 +11,7 @@ import { isEmpty, generateRefererCode, generateOTP } from '@utils/util';
 import { UserAddress } from '@/interfaces/user-address.interface';
 import userAddressModel from '@/models/user-address.model';
 import ReferralModel from '@/models/referral.model';
+import { IReferral } from '@/interfaces/referral.interface';
 
 class UserService {
   public users = userModel;
@@ -31,6 +32,10 @@ class UserService {
   public async findAllUser(): Promise<User[]> {
     const users: User[] = await this.users.find();
     return users;
+  }
+  public async findAllReferrers(): Promise<IReferral[]> {
+    const referrals: IReferral[] = await this.referModel.find();
+    return referrals;
   }
 
   public async findUserById(userId: string): Promise<User> {
