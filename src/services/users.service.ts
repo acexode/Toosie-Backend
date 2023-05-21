@@ -34,7 +34,7 @@ class UserService {
     return users;
   }
   public async findAllReferrers(): Promise<IReferral[]> {
-    const referrals: IReferral[] = await this.referModel.find();
+    const referrals: IReferral[] = await this.referModel.find().populate('referee').populate('referrer');
     return referrals;
   }
 
