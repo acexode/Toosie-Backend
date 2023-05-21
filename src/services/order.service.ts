@@ -37,7 +37,7 @@ class OrderService {
     };
     const createOrderData: IOrder = await this.Orders.create(newOrder);
     if (OrderData.paymentStatus === 'paid') {
-      const amount = 0.05 * (OrderData.totalCost - OrderData.shipping?.addressDeliveryCost);
+      const amount = Math.ceil(0.05 * (OrderData.totalCost - OrderData.shipping?.addressDeliveryCost));
       if(OrderData.loyaltyPoint){
         userModel.findByIdAndUpdate(OrderData.customerId, { $set: { loyaltyPoint: amount } });
       }else{
@@ -53,15 +53,15 @@ class OrderService {
     if (isEmpty(OrderData)) throw new HttpException(400, "You're not OrderData");
 
     const findOrder: IOrder = await this.Orders.findOne({ _id: OrderId });
-    console.log(findOrder);
+    console.log(findOrder, OrderData);
     if (!findOrder) throw new HttpException(409, `Order does not  exists`);
 
-    // if (OrderData.paymentStatus === 'paid') {
-    //   const amount = 0.05 * (findOrder.totalCost - findOrder.shipping?.addressDeliveryCost);
-    //   console.log(findOrder.totalCost, findOrder.shipping?.addressDeliveryCost, amount);
-    //   const user = await userModel.findByIdAndUpdate(findOrder.customerId, { $inc: { loyaltyPoint: amount } });
-    //   console.log(user);
-    // }
+    if (OrderData.paymentStatus === 'paid') {
+      const amount = Math.ceil(0.05 * (findOrder.totalCost - findOrder.shipping?.addressDeliveryCost));
+      console.log(findOrder.totalCost, findOrder.shipping?.addressDeliveryCost, amount);
+      const user = await userModel.findByIdAndUpdate(findOrder.customerId, { $inc: { loyaltyPoint: amount } });
+      console.log(user);
+    }
     if (OrderData.deliveryStatus === 'delivered') {
       findOrder.orderDetails.forEach(async item => {
         await ProductModel.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } });
