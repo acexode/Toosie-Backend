@@ -77,6 +77,7 @@ class UserService {
     console.log('referrer token', userData);
     if (userData.referrerToken) {
       await this.referModel.create({ referrer: referer._id, referee: createUserData._id, referrerToken: userData.referrerToken });
+      await userModel.findByIdAndUpdate(referer._id, { $inc: { loyaltyPoint: 200 } });
     }
     return createUserData;
   }
