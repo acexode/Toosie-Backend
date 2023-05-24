@@ -42,7 +42,7 @@ class BlogService {
       if (!findBlog) throw new HttpException(409, `Blog does not  exists`);
     }
 
-    const updateBlogById: IBlog = await this.Blogs.findByIdAndUpdate(BlogId, { BlogData });
+    const updateBlogById: IBlog = await this.Blogs.findByIdAndUpdate(BlogId,  BlogData );
     if (!updateBlogById) throw new HttpException(409, 'Failed to update blog');
 
     return updateBlogById;
