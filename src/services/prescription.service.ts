@@ -10,7 +10,7 @@ class PrescriptionService {
   public Prescriptions = PrescriptionModel;
 
   public async findAllPrescription(query): Promise<IPrescription[]> {
-    const Prescriptions: IPrescription[] = await this.Prescriptions.find(query);
+    const Prescriptions: IPrescription[] = await this.Prescriptions.find(query).populate('customerId');
     return Prescriptions;
   }
 
