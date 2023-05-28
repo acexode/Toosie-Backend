@@ -32,6 +32,8 @@ class App {
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
+
+    // console.log(webpush.generateVAPIDKeys());
     // this.emailS.verificationToken();
   }
 

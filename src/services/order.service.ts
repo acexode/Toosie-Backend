@@ -7,11 +7,52 @@ import { isEmpty, uuidv4 } from '@utils/util';
 import OrderModel from '@/models/order.model';
 import userModel from '@/models/users.model';
 import ProductModel from '@/models/products.model';
+import notificationModel from '@/models/notification.model';
+import { INotification } from '@/interfaces/notification.interface';
+const webpush = require('web-push');
+const vapidKeys = {
+  publicKey: 'BEvFjH8RiqlzCGg3KQOv-xxktBqiiVHPCMMlDxRTTrhgA1nRPvV7yBQ79Aa8bT6ZeYT6b06ViQ2sp2AoOSJ0R_8',
+  privateKey: '5GOFvtncEpg8fuE7EZaFZDzt7zIA8usxToqwyikmtCk'
+}
+const options = {
+  vapidDetails: {
+      subject: 'mailto:toosiePharmacy.com',
+      publicKey: vapidKeys.publicKey,
+      privateKey: vapidKeys.privateKey,
+  },
+  TTL: 60,
+};
 
+
+const payload = {
+  notification: {
+      title: 'Title',
+      body: 'A new order has been submitted',
+      icon: 'assets/icons/icon-384x384.png',
+      actions: [
+          { action: 'bar', title: 'View Order' },
+          // { action: 'baz', title: 'Navigate last' },
+      ],
+      data: {
+          onActionClick: {
+              default: { operation: 'openWindow' },
+              bar: {
+                  operation: 'focusLastFocusedOrOpen',
+                  url: '/dashboard/main/sales/orders',
+              },
+              // baz: {
+              //     operation: 'navigateLastFocusedOrOpen',
+              //     url: '/signin',
+              // },
+          },
+      },
+  },
+};
 class OrderService {
   public Orders = OrderModel;
   public UserM = userModel;
   public ProductM = ProductModel;
+  public notfify = notificationModel;
 
   public async findAllOrder(query): Promise<IOrder[]> {
     const Orders: IOrder[] = await this.Orders.find(query).populate('products').populate('customerId');
@@ -45,6 +86,30 @@ class OrderService {
         userModel.findByIdAndUpdate(OrderData.customerId, { $inc: { loyaltyPoint: amount } });
       }
     }
+
+    const notifications: INotification[] = await notificationModel.find()
+    if(notifications.length > 0){
+      notifications.forEach(n => {
+        const subscription = {
+          endpoint: n.endpoint,
+          expirationTime: null,
+          keys: {
+              auth: n.keys.auth,
+              p256dh: n.keys.p256dh,
+          },
+        };
+        webpush.sendNotification(subscription, JSON.stringify(payload), options)
+        .then((_) => {
+            console.log('SENT!!!');
+            console.log(_);
+        })
+        .catch((_) => {
+            console.log(_);
+        });
+
+      })
+    }
+
 
     return createOrderData;
   }
