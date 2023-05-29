@@ -26,8 +26,8 @@ const options = {
 
 const payload = {
   notification: {
-      title: 'Title',
-      body: 'A new order has been submitted',
+      title: 'New Order',
+      body: 'A customer has created new order, go to the dashboard to process....',
       icon: 'assets/icons/icon-384x384.png',
       actions: [
           { action: 'bar', title: 'View Order' },
