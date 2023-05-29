@@ -9,7 +9,6 @@
     "dev:server": "nodemon --watch './**/*.ts' --exec 'ts-node' src/server.ts",
     "dev": "cross-env NODE_ENV=development nodemon",
     "build": "tsc && npx tsc-alias",
-    "postinstall": "tsc",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "lint:fix": "npm run lint -- --fix",
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
